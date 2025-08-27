@@ -11,17 +11,13 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -85,7 +81,7 @@ const ForgotPasswordForm = ({ className, openModal }) => {
             type="email"
             placeholder=" "
             autoComplete="email"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent py-2 px-0 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="email"
@@ -105,11 +101,12 @@ const ForgotPasswordForm = ({ className, openModal }) => {
 
       <div className="my-5 space-y-5">
         <p className="text-center text-gray-500 text-sm my-6">
+          {"< "}
           <strong
             onClick={() => openModal("login")}
             className="font-semibold text-green-900 cursor-pointer hover:underline"
           >
-            {"< Back to Login"}
+            Back to Login
           </strong>
         </p>
       </div>

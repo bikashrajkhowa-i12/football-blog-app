@@ -70,7 +70,7 @@ const LoginForm = ({ className, openModal }) => {
             type="email"
             placeholder=" "
             autoComplete="email"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent py-2 px-0 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="email"
@@ -85,7 +85,7 @@ const LoginForm = ({ className, openModal }) => {
             type="password"
             placeholder=" "
             autoComplete="password"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent py-2 px-0 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="password"

@@ -10,6 +10,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Footer from "@/components/Footer";
 
 const Home = () => {
   const featuredArticles = [
@@ -40,11 +41,9 @@ const Home = () => {
   ];
   return (
     <>
-      <header className="fixed top-0 w-screen flex justify-center">
-        <Navbar />
-      </header>
+      <Navbar />
       <AuthPanel />
-      <main className="min-h-screen bg-white px-6 md:px-16 py-10">
+      <main className="min-h-screen bg-white px-2 md:px-16 py-10">
         {/* Hero Section */}
         <section className="max-w-5xl mx-auto text-center my-12">
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
@@ -66,7 +65,7 @@ const Home = () => {
 
         {/* Featured Articles */}
         <section className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8 border-b pb-2 border-gray-200">
+          <h2 className="text-3xl font-bold mb-2 border-b pb-2 border-gray-200">
             Featured Articles
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -105,9 +104,7 @@ const Home = () => {
           </Button>
         </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        This is Footer
-      </footer>
+      <Footer />
     </>
   );
 };

@@ -76,26 +76,11 @@ const SignupForm = ({ className, openModal }) => {
       >
         <div className="relative w-full">
           <Input
-            id="username"
-            type="text"
-            placeholder=" "
-            autoComplete="username"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent py-2 px-0 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
-          />
-          <Label
-            htmlFor="username"
-            className="absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600"
-          >
-            Username
-          </Label>
-        </div>
-        <div className="relative w-full">
-          <Input
             id="email"
             type="email"
             placeholder=" "
             autoComplete="email"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent py-2 px-0 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="email"
@@ -110,7 +95,7 @@ const SignupForm = ({ className, openModal }) => {
             type="password"
             placeholder=" "
             autoComplete="password"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent py-2 px-0 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="password"
@@ -119,21 +104,23 @@ const SignupForm = ({ className, openModal }) => {
             Create password
           </Label>
         </div>
-        <div className="flex items-center space-x-2">
-          <input
-            id="remember"
-            type="checkbox"
-            className="border-gray-300 rounded cursor-pointer"
+        <div className="relative w-full">
+          <Input
+            id="confirm_password"
+            type="password"
+            placeholder=" "
+            autoComplete="confirm_password"
+            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
-            htmlFor="remember"
-            className="text-sm text-gray-700 cursor-pointer"
+            htmlFor="confirm_password"
+            className="absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600"
           >
-            Remember Me
+            Confirm password
           </Label>
         </div>
         <Button type="submit" variant="success" size="lg" className="mt-4">
-          Signup
+          Sign up
         </Button>
       </form>
       <div className="my-5 space-y-5">
