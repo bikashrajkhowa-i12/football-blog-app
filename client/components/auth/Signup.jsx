@@ -1,23 +1,22 @@
 "use client";
 
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
-  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
+  DrawerDescription,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,95 +26,101 @@ import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 const Signup = () => {
   const { modalType, isOpen, openModal, setIsOpen } = useAuthModal();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isActive = modalType === "signup" && isOpen;
 
-  if (isDesktop) {
-    return (
-      <Dialog
-        open={modalType && modalType === "signup" && isOpen}
-        onOpenChange={setIsOpen}
-      >
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Greetings!</DialogTitle>
-            <DialogDescription>
-              Sign up and join us to see the latest news!
-            </DialogDescription>
-          </DialogHeader>
-          <SignupForm openModal={openModal} />
-        </DialogContent>
-      </Dialog>
-    );
-  }
+  const content = (
+    <SignupForm
+      className={isDesktop ? undefined : "px-4"}
+      openModal={openModal}
+    />
+  );
 
-  return (
-    <Drawer
-      open={modalType && modalType === "signup" && isOpen}
-      onOpenChange={setIsOpen}
-    >
+  return isDesktop ? (
+    <Dialog open={isActive} onOpenChange={setIsOpen}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Greetings!</DialogTitle>
+          <DialogDescription>
+            Sign up and join us to see the latest news!
+          </DialogDescription>
+        </DialogHeader>
+        {content}
+      </DialogContent>
+    </Dialog>
+  ) : (
+    <Drawer open={isActive} onOpenChange={setIsOpen}>
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Greetings!</DrawerTitle>
           <DrawerDescription>
-            Signup and join us to see the latest news!
+            Sign up and join us to see the latest news!
           </DrawerDescription>
         </DrawerHeader>
-        <SignupForm className="px-4" openModal={openModal} />
+        {content}
       </DrawerContent>
     </Drawer>
   );
 };
 
 const SignupForm = ({ className, openModal }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const values = Object.fromEntries(formData.entries());
+    console.log(values);
+  };
+
+  const inputClasses =
+    "peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm";
+
+  const labelClasses =
+    "absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600";
+
   return (
     <div>
       <form
         className={cn(
-          "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6 ",
+          "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6",
           className
         )}
+        onSubmit={handleSubmit}
       >
         <div className="relative w-full">
           <Input
             id="email"
+            name="email"
             type="email"
             placeholder=" "
             autoComplete="email"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className={inputClasses}
           />
-          <Label
-            htmlFor="email"
-            className="absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600"
-          >
+          <Label htmlFor="email" className={labelClasses}>
             Email
           </Label>
         </div>
         <div className="relative w-full">
           <Input
             id="password"
+            name="password"
             type="password"
             placeholder=" "
-            autoComplete="password"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            autoComplete="new-password"
+            className={inputClasses}
           />
-          <Label
-            htmlFor="password"
-            className="absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600"
-          >
+          <Label htmlFor="password" className={labelClasses}>
             Create password
           </Label>
         </div>
         <div className="relative w-full">
           <Input
             id="confirm_password"
+            name="confirm_password"
             type="password"
             placeholder=" "
-            autoComplete="confirm_password"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            autoComplete="new-password"
+            className={inputClasses}
           />
-          <Label
-            htmlFor="confirm_password"
-            className="absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600"
-          >
+          <Label htmlFor="confirm_password" className={labelClasses}>
             Confirm password
           </Label>
         </div>
@@ -123,6 +128,7 @@ const SignupForm = ({ className, openModal }) => {
           Sign up
         </Button>
       </form>
+
       <div className="my-5 space-y-5">
         <p className="text-center text-gray-600">Or</p>
         <GoogleButton />

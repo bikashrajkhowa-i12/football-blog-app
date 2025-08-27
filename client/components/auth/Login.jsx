@@ -56,9 +56,24 @@ const Login = () => {
 };
 
 const LoginForm = ({ className, openModal }) => {
+  const [formData, setFormData] = React.useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
   return (
     <div>
       <form
+        onSubmit={handleSubmit}
         className={cn(
           "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6 ",
           className
@@ -68,6 +83,8 @@ const LoginForm = ({ className, openModal }) => {
           <Input
             id="email"
             type="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder=" "
             autoComplete="email"
             className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
@@ -83,8 +100,10 @@ const LoginForm = ({ className, openModal }) => {
           <Input
             id="password"
             type="password"
+            value={formData.password}
+            onChange={handleChange}
             placeholder=" "
-            autoComplete="password"
+            autoComplete="current-password"
             className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
@@ -94,7 +113,7 @@ const LoginForm = ({ className, openModal }) => {
             Password
           </Label>
         </div>
-        <div className="flex items-center ">
+        <div className="flex items-center">
           <div className="flex w-full space-x-2">
             <input
               id="remember"

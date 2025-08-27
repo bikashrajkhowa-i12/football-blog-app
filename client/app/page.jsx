@@ -41,70 +41,61 @@ const Home = () => {
   ];
   return (
     <>
-      <Navbar />
-      <AuthPanel />
-      <main className="min-h-screen bg-white px-2 md:px-16 py-10">
-        {/* Hero Section */}
-        <section className="max-w-5xl mx-auto text-center my-12">
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
-            Welcome to <span className="text-green-900">FootScribe90</span>
-          </h1>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
-            Your ultimate source for football news, in-depth analysis, and live
-            updates — all tailored for passionate fans.
-          </p>
-          <div className="flex justify-center gap-4">
-            <Button size="lg" variant="default">
-              Read Latest Articles
-            </Button>
-            <Button size="lg" variant="outline">
-              Subscribe Now
-            </Button>
-          </div>
-        </section>
-
-        {/* Featured Articles */}
-        <section className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold mb-2 border-b pb-2 border-gray-200">
-            Featured Articles
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredArticles.map(
-              ({ id, title, description, date, category }) => (
-                <Card key={id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <Badge variant="secondary" className="mb-2">
-                      {category}
-                    </Badge>
-                    <CardTitle className="text-xl">{title}</CardTitle>
-                    <CardDescription className="text-sm text-gray-500">
-                      {date}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-700">{description}</p>
-                  </CardContent>
-                </Card>
-              )
-            )}
-          </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="max-w-5xl mx-auto text-center mt-20">
-          <h2 className="text-3xl font-semibold mb-4">
-            Join Thousands of Football Fans
-          </h2>
-          <p className="text-gray-700 mb-6 max-w-xl mx-auto">
-            Subscribe to our newsletter for exclusive insights and stay updated
-            with every kick on the pitch.
-          </p>
-          <Button size="lg" variant="default">
+      <section className="max-w-5xl mx-auto text-center">
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
+          Welcome to <span className="text-green-900">FootScribe90</span>
+        </h1>
+        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
+          Your ultimate source for football news, in-depth analysis, and live
+          updates — all tailored for passionate fans.
+        </p>
+        <div className="flex justify-center gap-4">
+          <Button size="lg" variant="dark">
+            Read Latest Articles
+          </Button>
+          <Button size="lg" variant="outline">
             Subscribe Now
           </Button>
-        </section>
-      </main>
-      <Footer />
+        </div>
+      </section>
+
+      {/* Featured Articles */}
+      <section className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-bold mb-2 border-b pb-2 border-gray-200">
+          Featured Articles
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featuredArticles.map(
+            ({ id, title, description, date, category }) => (
+              <Card key={id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <Badge variant="secondary" className="mb-2">
+                    {category}
+                  </Badge>
+                  <CardTitle className="text-xl">{title}</CardTitle>
+                  <CardDescription className="text-sm text-gray-500">
+                    {date}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-700">{description}</p>
+                </CardContent>
+              </Card>
+            )
+          )}
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="max-w-5xl mx-auto text-center mt-20">
+        <h2 className="text-3xl font-semibold mb-4">
+          Join Thousands of Football Fans
+        </h2>
+        <p className="text-gray-700 mb-6 max-w-xl mx-auto">
+          Subscribe to our newsletter for exclusive insights and stay updated
+          with every kick on the pitch.
+        </p>
+      </section>
     </>
   );
 };

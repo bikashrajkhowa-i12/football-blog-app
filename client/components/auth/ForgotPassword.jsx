@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -26,52 +25,47 @@ import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 const ForgotPassword = () => {
   const { modalType, isOpen, openModal, setIsOpen } = useAuthModal();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isForgotPasswordOpen = modalType === "forgot_password" && isOpen;
 
-  if (isDesktop) {
-    return (
-      <Dialog
-        open={modalType && modalType === "forgot_password" && isOpen}
-        onOpenChange={setIsOpen}
-      >
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Recovery</DialogTitle>
-            <DialogDescription>
-              Enter your email associated with your account and we will send you
-              steps to reset.
-            </DialogDescription>
-          </DialogHeader>
-          <ForgotPasswordForm openModal={openModal} />
-        </DialogContent>
-      </Dialog>
-    );
-  }
+  const ModalWrapper = isDesktop ? Dialog : Drawer;
+  const ContentWrapper = isDesktop ? DialogContent : DrawerContent;
+  const HeaderWrapper = isDesktop ? DialogHeader : DrawerHeader;
+  const TitleWrapper = isDesktop ? DialogTitle : DrawerTitle;
+  const DescriptionWrapper = isDesktop ? DialogDescription : DrawerDescription;
 
   return (
-    <Drawer
-      open={modalType && modalType === "forgot_password" && isOpen}
-      onOpenChange={setIsOpen}
-    >
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Recovery</DrawerTitle>
-          <DrawerDescription>
+    <ModalWrapper open={isForgotPasswordOpen} onOpenChange={setIsOpen}>
+      <ContentWrapper className="sm:max-w-[425px]">
+        <HeaderWrapper className={isDesktop ? "" : "text-left"}>
+          <TitleWrapper>Recovery</TitleWrapper>
+          <DescriptionWrapper>
             Enter your email associated with your account and we will send you
             steps to reset.
-          </DrawerDescription>
-        </DrawerHeader>
-        <ForgotPasswordForm className="px-4" openModal={openModal} />
-      </DrawerContent>
-    </Drawer>
+          </DescriptionWrapper>
+        </HeaderWrapper>
+        <ForgotPasswordForm
+          className={isDesktop ? "" : "px-4"}
+          openModal={openModal}
+        />
+      </ContentWrapper>
+    </ModalWrapper>
   );
 };
 
 const ForgotPasswordForm = ({ className, openModal }) => {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({ email }); // log form values
+  };
+
   return (
     <div>
       <form
+        onSubmit={handleSubmit}
         className={cn(
-          "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6 ",
+          "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6",
           className
         )}
       >
@@ -79,9 +73,12 @@ const ForgotPasswordForm = ({ className, openModal }) => {
           <Input
             id="email"
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder=" "
             autoComplete="email"
             className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            required
           />
           <Label
             htmlFor="email"
@@ -99,17 +96,15 @@ const ForgotPasswordForm = ({ className, openModal }) => {
         </Button>
       </form>
 
-      <div className="my-5 space-y-5">
-        <p className="text-center text-gray-500 text-sm my-6">
-          {"< "}
-          <strong
-            onClick={() => openModal("login")}
-            className="font-semibold text-green-900 cursor-pointer hover:underline"
-          >
-            Back to Login
-          </strong>
-        </p>
-      </div>
+      <p className="text-center text-gray-500 text-sm my-6">
+        {"< "}
+        <strong
+          onClick={() => openModal("login")}
+          className="font-semibold text-green-900 cursor-pointer hover:underline"
+        >
+          Back to Login
+        </strong>
+      </p>
     </div>
   );
 };

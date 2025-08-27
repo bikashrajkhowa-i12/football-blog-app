@@ -12,15 +12,26 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-  SheetClose,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react"; // install with: npm install lucide-react
+import { Menu, UserRound } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { IconLogout } from "@tabler/icons-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const Navbar = () => {
   const { openModal } = useAuthModal();
+  const isAuthenticated = false; // TODO: read from authContext
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+
   const links = [
     { title: "Home", path: "/" },
-    { title: "Feeds", path: "/feeds" },
     { title: "Latest", path: "/latest" },
     { title: "Leagues", path: "/leagues" },
     { title: "Teams", path: "/teams" },
@@ -28,23 +39,47 @@ const Navbar = () => {
     { title: "About", path: "/about" },
   ];
 
-  const AppLogo = () => {
-    return (
-      <div className="text-3xl md:text-[48px] font-poppins tracking-tighter">
-        <span className="font-light">foot</span>
-        <span className="font-extrabold text-gray-900">scribe</span>
-        <span className="font-extrabold text-green-900">90</span>
-      </div>
-    );
-  };
+  const AppLogo = () => (
+    <div className="text-[30px] md:text-[40px] font-poppins tracking-tighter">
+      <span className="font-light text-gray-900">foot</span>
+      <span className="font-extrabold text-gray-900">scribe</span>
+      <span className="font-bold text-green-900">90</span>
+    </div>
+  );
+
+  const ProfilePopOver = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Avatar className="h-11 w-11 rounded-full cursor-pointer">
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>ER</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="w-40 bg-zinc-950 text-white"
+        align="start"
+      >
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/me" className="flex items-center gap-2">
+              <UserRound size={16} /> Profile
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-2">
+            <IconLogout size={16} /> Logout
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
-    <header className="fixed top-0 w-screen flex justify-center">
+    <header className="fixed top-0 w-screen z-50 flex justify-center">
       <nav className="bg-white border-b md:border-gray-300 w-full">
         <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between space-x-5">
           {/* Mobile Sheet */}
           <div className="md:hidden">
-            <Sheet>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm" aria-label="Open menu">
                   <Menu />
@@ -69,6 +104,7 @@ const Navbar = () => {
                       key={link.title}
                       href={link.path}
                       className="text-base font-medium hover:text-blue-600"
+                      onClick={() => setIsSheetOpen(false)} // ✅ closes drawer on click
                     >
                       {link.title}
                     </Link>
@@ -79,10 +115,8 @@ const Navbar = () => {
           </div>
 
           {/* App logo */}
-          <div className="w-full">
-            <div className="font-bold text-xl pl-10 md:pl-0">
-              <AppLogo />
-            </div>
+          <div className="font-bold text-xl pl-10 md:pl-0">
+            <AppLogo />
           </div>
 
           {/* Desktop Links */}
@@ -91,20 +125,26 @@ const Navbar = () => {
               <li key={link.title}>
                 <Link
                   href={link.path}
-                  className="text-sm font-medium hover:text-gray-600 transition-colors"
+                  className="text-lg font-medium hover:text-gray-600 transition-colors"
                 >
                   {link.title}
                 </Link>
               </li>
             ))}
           </ul>
-          <Button
-            className="ml-2"
-            variant="success"
-            onClick={() => openModal("login")}
-          >
-            Login
-          </Button>
+
+          {/* Auth section */}
+          {isAuthenticated ? (
+            <ProfilePopOver />
+          ) : (
+            <Button
+              className="ml-2"
+              variant="dark"
+              onClick={() => openModal("login")}
+            >
+              Login
+            </Button>
+          )}
         </div>
       </nav>
     </header>
