@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { isEmpty } from "lodash";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,16 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import GoogleButton from "../GoogleButton";
+
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
+import { useLoader } from "@/contexts/LoaderContext";
+import callApi from "@/lib/callApi";
+import { useAuth } from "@/contexts/auth/AuthContext";
+import GoogleButton from "./GoogleButton";
 
 const Login = () => {
-  const { modalType, isOpen, openModal, setIsOpen } = useAuthModal();
+  const { modalType, isOpen, openModal, closeModal, setIsOpen } =
+    useAuthModal();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {
@@ -36,7 +42,7 @@ const Login = () => {
             <DialogTitle>Welcome Back!</DialogTitle>
             <DialogDescription>Login to see the latest news!</DialogDescription>
           </DialogHeader>
-          <LoginForm openModal={openModal} />
+          <LoginForm openModal={openModal} closeModal={closeModal} />
         </DialogContent>
       </Dialog>
     );
@@ -49,13 +55,19 @@ const Login = () => {
           <DrawerTitle>Welcome Back!</DrawerTitle>
           <DrawerDescription>Login to see the latest news!</DrawerDescription>
         </DrawerHeader>
-        <LoginForm className="px-4" openModal={openModal} />
+        <LoginForm
+          className="px-4"
+          openModal={openModal}
+          closeModal={closeModal}
+        />
       </DrawerContent>
     </Drawer>
   );
 };
 
-const LoginForm = ({ className, openModal }) => {
+const LoginForm = ({ className, openModal, closeModal }) => {
+  const { login } = useAuth() || {};
+  const { startLoading, stopLoading } = useLoader();
   const [formData, setFormData] = React.useState({
     email: "",
     password: "",
@@ -65,15 +77,31 @@ const LoginForm = ({ className, openModal }) => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const onClickLogin = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    if (isEmpty(formData)) return;
+
+    try {
+      startLoading({ prompt: "Logging in..." });
+      const response = await callApi({
+        method: "POST",
+        url: "/auth/login",
+        data: formData,
+      });
+      login(response?.data?.user, response?.data?.accessToken);
+      closeModal();
+    } catch (error) {
+      console.log("Error: ", error?.message);
+    } finally {
+      stopLoading();
+    }
   };
 
   return (
     <div>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={onClickLogin}
         className={cn(
           "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6 ",
           className
@@ -83,7 +111,7 @@ const LoginForm = ({ className, openModal }) => {
           <Input
             id="email"
             type="email"
-            value={formData.email}
+            value={formData?.email || ""}
             onChange={handleChange}
             placeholder=" "
             autoComplete="email"
@@ -100,7 +128,7 @@ const LoginForm = ({ className, openModal }) => {
           <Input
             id="password"
             type="password"
-            value={formData.password}
+            value={formData?.password || ""}
             onChange={handleChange}
             placeholder=" "
             autoComplete="current-password"
@@ -144,6 +172,7 @@ const LoginForm = ({ className, openModal }) => {
 
       <div className="my-5 space-y-5">
         <p className="text-center text-gray-600">Or</p>
+        {/* <GoogleButton /> */}
         <GoogleButton />
         <p className="text-center text-gray-500 text-sm my-6">
           Don&apos;t have an account?{" "}

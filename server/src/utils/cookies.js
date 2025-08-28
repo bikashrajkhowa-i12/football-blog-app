@@ -1,17 +1,22 @@
 const cookieBaseOptions = {
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
-  path: "/", // explicitly set so clear works reliably
+  path: "/", // explicit path so clear works
+  secure: process.env.NODE_ENV === "production", // HTTPS only in prod
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // cross-site in prod
+  domain:
+    process.env.NODE_ENV === "production"
+      ? process.env.COOKIE_DOMAIN // e.g. ".your-frontend.com"
+      : "localhost",
 };
 
 const setAuthCookies = (res, refreshToken) => {
+  // HttpOnly refresh token
   res.cookie("refreshToken", refreshToken, {
     ...cookieBaseOptions,
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
-  // Non-HttpOnly hint cookie for frontend session check
+  // Non-httpOnly session hint for frontend
   res.cookie("session", true, {
     ...cookieBaseOptions,
     httpOnly: false,

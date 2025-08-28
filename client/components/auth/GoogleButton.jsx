@@ -1,56 +1,38 @@
-import { useEffect } from "react";
+"use client";
 
-import callApi from "../../api/callApi";
-import { useLoader } from "../../context/LoaderContext";
-import { useAuth } from "../../context/auth/AuthContext";
+import { FcGoogle } from "react-icons/fc";
 
-const GoogleButton = ({ setError, onClose, toast = () => "" }) => {
-  const { startLoading, stopLoading } = useLoader();
-  const { login } = useAuth();
+const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 
-  useEffect(() => {
-    /* global google */ // only needed if you load the script via index.html
-    setError(null);
-    try {
-      if (!window.google) throw new Error("Google script not loaded");
+export default function GoogleButton() {
+  const handleLogin = async () => {
+    const res = await fetch("/api/auth/google-state"); //nextjs server
+    const data = await res.json();
+    const state = data.state;
 
-      google.accounts.id.initialize({
-        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-        auto_select: false, //disables auto selects on previous login/signup
-      });
+    const googleAuthUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      new URLSearchParams({
+        client_id: GOOGLE_CLIENT_ID,
+        redirect_uri: GOOGLE_REDIRECT_URI,
+        response_type: "code",
+        scope: "openid email profile",
+        access_type: "offline",
+        prompt: "consent",
+        state,
+      }).toString();
 
-      google.accounts.id.renderButton(document.getElementById("googleBtn"), {
-        theme: "outline",
-        size: "large",
-        text: "continue_with",
-      });
-    } catch (err) {
-      setError(err);
-    }
-  }, [setError]);
-
-  const handleCredentialResponse = async (response) => {
-    setError(null);
-    startLoading({ type: "global", prompt: "Signing you in...Please wait" });
-    try {
-      const res = await callApi({
-        url: "/auth/google",
-        method: "POST",
-        data: { credential: response.credential },
-      });
-
-      login(res?.data?.user, res?.data?.accessToken);
-      toast();
-      onClose();
-    } catch (error) {
-      setError(error);
-    } finally {
-      stopLoading({ type: "global" });
-    }
+    window.location.href = googleAuthUrl;
   };
 
-  return <div id="googleBtn" onClick={() => setError(null)}></div>;
-};
-
-export default GoogleButton;
+  return (
+    <button
+      onClick={handleLogin}
+      className="w-full bg-white text-md flex justify-center gap-3 px-4 py-2 rounded-lg shadow-lg opacity-70 cursor-pointer
+                 hover:opacity-80 hover:bg-gray-300 active:opacity-100 active:bg-gray-300 transition duration-300"
+    >
+      <FcGoogle className="text-[22px] mt-[3.6px]" /> Continue with Google
+    </button>
+  );
+}

@@ -3,10 +3,7 @@
 import React, { useContext, createContext, useReducer, useEffect } from "react";
 import { authReducer, initialAuthState } from "./authReducer";
 
-import callApi, {
-  setAccessToken,
-  setAuthHandler,
-} from "../../services/callApi";
+import callApi, { setAccessToken, setAuthHandler } from "../../lib/callApi";
 import { useLoader } from "../LoaderContext";
 
 const AuthContext = createContext();

@@ -6,17 +6,17 @@ import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/auth/AuthContext";
 import { useLoader } from "@/contexts/LoaderContext";
 
-import Loader from "../Loader";
-import AdminShell from "./AdminShell";
-import PublicShell from "./PublicShell";
+import GlobalLoader from "../GlobalLoader";
+import AdminLayout from "./AdminLayout";
+import PublicLayout from "./PublicLayout";
 
-const AppShell = ({ children }) => {
+const AppRedirect = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
   const { user = {}, isAuthenticated = false } = useAuth() || {};
   const { loading, prompt, startLoading, stopLoading } = useLoader();
-  const isAdmin = isAuthenticated && user?.role === "admin";
+  const isAdmin = false; //isAuthenticated && user?.role === "admin";
 
   useEffect(() => {
     const validatePath = pathname.startsWith("/admin");
@@ -34,14 +34,14 @@ const AppShell = ({ children }) => {
 
   return (
     <>
-      <Loader loading={loading} prompt={prompt} />
+      <GlobalLoader loading={loading} prompt={prompt} />
       {isAdmin ? (
-        <AdminShell>{children}</AdminShell>
+        <AdminLayout>{children}</AdminLayout>
       ) : (
-        <PublicShell>{children}</PublicShell>
+        <PublicLayout>{children}</PublicLayout>
       )}
     </>
   );
 };
 
-export default AppShell;
+export default AppRedirect;

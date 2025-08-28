@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/auth/AuthContext";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,13 +29,16 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { IconPaperclip } from "@tabler/icons-react";
+import Unauthorized from "@/components/UnAuthorized";
 
-export default function ProfilePage() {
+const ProfilePage = () => {
+  const { user = {}, isAuthenticated = false } = useAuth() || {};
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [personalForm, setPersonalForm] = useState({
     name: "",
     username: "",
-    about: "",
-    avatar: "",
+    bio: "",
+    avatar_url: "",
   });
 
   const [accountForm, setAccountForm] = useState({
@@ -43,23 +47,27 @@ export default function ProfilePage() {
     timezone: "",
   });
 
-  // Simulate fetch
   useEffect(() => {
-    setPersonalForm({
-      name: "lord",
-      username: "lord98",
-      about: "",
-      avatar: "",
-    });
+    if (user && isAuthenticated) {
+      setIsAuthorized(true);
+      setPersonalForm({
+        name: user?.name || "",
+        username: user?.username || "",
+        bio: user?.bio || "",
+        avatar_url: user?.avatar_url || "",
+      });
 
-    setAccountForm({
-      email: "bikashrajkhowa424265@gmail.com",
-      language: "en",
-      timezone: "GMT+5:30",
-    });
-  }, []);
+      setAccountForm({
+        email: user?.email || "",
+        language: "en",
+        timezone: "GMT+5:30",
+      });
+    } else {
+      setIsAuthorized(false);
+    }
+  }, [user, isAuthenticated, isAuthorized]);
 
-  const initials = personalForm.name
+  const initials = personalForm?.name
     ? personalForm?.name
         ?.trim()
         .split(" ")
@@ -92,7 +100,9 @@ export default function ProfilePage() {
     console.log("✅ Account saved:", accountForm);
   };
 
-  return (
+  return !isAuthorized ? (
+    <Unauthorized />
+  ) : (
     <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 pt-2 pb-12 px-1">
       {/* Avatar */}
       <Card className="text-center py-8 shadow-sm border">
@@ -155,7 +165,7 @@ export default function ProfilePage() {
                     <Label htmlFor="name">Name</Label>
                     <Input
                       id="name"
-                      value={personalForm.name || ""}
+                      value={personalForm?.name || ""}
                       onChange={(e) =>
                         handlePersonalChange("name", e.target.value)
                       }
@@ -167,7 +177,7 @@ export default function ProfilePage() {
                     <Label htmlFor="username">Username</Label>
                     <Input
                       id="username"
-                      value={personalForm.username || ""}
+                      value={personalForm?.username || ""}
                       onChange={(e) =>
                         handlePersonalChange("username", e.target.value)
                       }
@@ -177,14 +187,14 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <div className="flex justify-between items-center">
-                      <Label htmlFor="about">About</Label>
+                      <Label htmlFor="about">Bio</Label>
                       <span className="text-xs text-gray-400">
-                        {personalForm.about?.length || 0}/1000
+                        {personalForm?.bio?.length || 0}/1000
                       </span>
                     </div>
                     <Textarea
                       id="about"
-                      value={personalForm.about || ""}
+                      value={personalForm?.bio || ""}
                       onChange={(e) =>
                         handlePersonalChange("about", e.target.value)
                       }
@@ -226,7 +236,7 @@ export default function ProfilePage() {
                 <CardContent className="px-0">
                   <Label>Email</Label>
                   <Input
-                    value={accountForm.email || ""}
+                    value={accountForm?.email || ""}
                     readOnly
                     className="mt-1 bg-gray-50 border-none"
                   />
@@ -241,7 +251,7 @@ export default function ProfilePage() {
                   <div>
                     <Label>Language</Label>
                     <Select
-                      value={accountForm.language || ""}
+                      value={accountForm?.language || ""}
                       onValueChange={(val) =>
                         handleAccountChange("language", val)
                       }
@@ -290,4 +300,6 @@ export default function ProfilePage() {
       </Accordion>
     </div>
   );
-}
+};
+
+export default ProfilePage;

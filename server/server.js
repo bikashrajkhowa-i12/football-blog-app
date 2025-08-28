@@ -12,7 +12,7 @@ const app = express();
 // Middlewares
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL, //set production url in env
     credentials: true, // ✅ allows cookies to be sent
   })
 );

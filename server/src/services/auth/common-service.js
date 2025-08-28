@@ -16,6 +16,17 @@ const findUserById = async (id) => {
   }
 };
 
+const findUserByProviderId = async (providerId) => {
+  try {
+    return await User.findOne({
+      where: { provider_id: providerId },
+      status: "active",
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
 const createUser = async (data) => {
   try {
     return await User.create(data);
@@ -27,5 +38,6 @@ const createUser = async (data) => {
 module.exports = {
   findUserByEmail,
   findUserById,
+  findUserByProviderId,
   createUser,
 };

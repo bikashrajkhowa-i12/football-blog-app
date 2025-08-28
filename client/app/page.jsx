@@ -1,6 +1,3 @@
-import Navbar from "@/components/Navbar";
-import AuthPanel from "@/components/auth/AuthPanel";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +7,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Footer from "@/components/Footer";
 
 const Home = () => {
   const featuredArticles = [

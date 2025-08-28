@@ -2,7 +2,7 @@ import Navbar from "../Navbar";
 import AuthPanel from "../auth/AuthPanel";
 import Footer from "../Footer";
 
-const PublicShell = ({ children }) => {
+const PublicLayout = ({ children }) => {
   return (
     <>
       <Navbar />
@@ -15,4 +15,4 @@ const PublicShell = ({ children }) => {
   );
 };
 
-export default PublicShell;
+export default PublicLayout;

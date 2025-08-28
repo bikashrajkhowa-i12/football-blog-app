@@ -5,14 +5,20 @@ const { setAuthCookies, clearAuthCookies } = require("../../utils/cookies");
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const { accessToken, refreshToken, user } = await authService.login({
-      email,
-      password,
-    });
+    const { accessToken, refreshToken, user, isAuthenticated } =
+      await authService.login({
+        email,
+        password,
+      });
 
     setAuthCookies(res, refreshToken);
 
-    res.status(201).json({ accessToken, user, message: "Login successful" });
+    res.status(201).json({
+      accessToken,
+      user,
+      isAuthenticated,
+      message: "Login successful",
+    });
   } catch (err) {
     console.log(err);
     res
@@ -35,13 +41,17 @@ const logout = async (req, res) => {
 const signup = async (req, res) => {
   try {
     const signupDto = new authDto.Signup(req.body);
-    const { accessToken, refreshToken, user } = await authService.signup(
-      signupDto
-    );
+    const { accessToken, refreshToken, user, isAuthenticated } =
+      await authService.signup(signupDto);
 
     setAuthCookies(res, refreshToken);
 
-    res.status(201).json({ accessToken, user, message: "Signup successful" });
+    res.status(201).json({
+      accessToken,
+      user,
+      isAuthenticated,
+      message: "Signup successful",
+    });
   } catch (err) {
     res
       .status(500)
@@ -63,28 +73,29 @@ const resetPassword = async (req, res) => {
 
 const googleAuth = async (req, res) => {
   try {
-    const { credential } = req.body;
-    const { accessToken, refreshToken, user } =
-      await authService.authenticateWithGoogle(credential);
+    const { code } = req?.query;
+    const { refreshToken } = await authService.authenticateWithGoogle(code);
 
     setAuthCookies(res, refreshToken);
 
-    res
-      .status(201)
-      .json({ accessToken, user, message: "Google-Authentication Successful" });
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .json({ message: err.message || "Google-Authentication Failed" });
+    res.redirect(process.env.FRONTEND_URL);
+  } catch (error) {
+    console.error(
+      "Error exchanging code:",
+      error.response?.data || error.message
+    );
+    res.status(500).json({ error: "Failed to exchange authorization code" });
   }
 };
 
 const refreshAccessToken = async (req, res) => {
   try {
     const token = req.refreshToken;
-    const { newAccessToken, user } = await authService.renewAuthTokens(token);
-    res.status(201).json({ accessToken: newAccessToken, user });
+    const { newAccessToken, user, isAuthenticated } =
+      await authService.renewAuthTokens(token);
+    res
+      .status(201)
+      .json({ accessToken: newAccessToken, user, isAuthenticated });
   } catch (err) {
     console.log(err);
     clearAuthCookies(res);

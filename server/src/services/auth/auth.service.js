@@ -1,13 +1,18 @@
+const { isEmpty } = require("lodash");
+
+const { callGoogleExternalApi } = require("../../utils/externalApiUtilities");
+
 const {
   generateAuthTokens,
-  verifyGoogleToken,
   verifyRefreshToken,
   generateAccessToken,
+  decodeIdToken,
 } = require("./jwt-service");
 const {
   findUserByEmail,
   createUser,
   findUserById,
+  findUserByProviderId,
 } = require("./common-service");
 const { verifyPassword, hashPassword } = require("./password.service");
 const authDto = require("../../dtos/auth.dto");
@@ -31,8 +36,13 @@ const login = async ({ email, password }) => {
     }
 
     const authTokens = generateAuthTokens(user);
+    const updatedUser = extractFields(user);
 
-    return { user: extractFields(user), ...authTokens };
+    return {
+      user: updatedUser,
+      ...authTokens,
+      isAuthenticated: !isEmpty(updatedUser),
+    };
   } catch (error) {
     throw error;
   }
@@ -49,17 +59,23 @@ const signup = async (data) => {
     const hashedPassword = await hashPassword(data.password);
     const user = await createUser({ ...data, password: hashedPassword });
     const authTokens = generateAuthTokens(user);
+    const updatedUser = extractFields(user);
 
-    return { user: extractFields(user), ...authTokens };
+    return {
+      user: updatedUser,
+      ...authTokens,
+      isAuthenticated: !isEmpty(updatedUser),
+    };
   } catch (error) {
     throw error;
   }
 };
 
-const authenticateWithGoogle = async (credential) => {
+const authenticateWithGoogle = async (code) => {
   try {
-    const payload = await verifyGoogleToken(credential);
-    let user = await findUserByEmail(payload.email);
+    const tokenResponse = await callGoogleExternalApi(code);
+    const payload = decodeIdToken(tokenResponse?.data?.id_token);
+    let user = await findUserByProviderId(payload?.sub);
 
     if (!user) {
       const userDto = new authDto.GoogleAuth(payload);
@@ -67,8 +83,13 @@ const authenticateWithGoogle = async (credential) => {
     }
 
     const authTokens = generateAuthTokens(user);
+    const updatedUser = extractFields(user);
 
-    return { user: extractFields(user), ...authTokens };
+    return {
+      user: updatedUser,
+      ...authTokens,
+      isAuthenticated: !isEmpty(updatedUser),
+    };
   } catch (error) {
     throw error;
   }
@@ -81,9 +102,12 @@ const renewAuthTokens = async (token) => {
     if (!user)
       throw new Error("User doesn't exist for with the refresh token!");
 
+    const updatedUser = extractFields(user);
+
     return {
-      user: extractFields(user),
+      user: updatedUser,
       newAccessToken: generateAccessToken(user),
+      isAuthenticated: !isEmpty(updatedUser),
     };
   } catch (error) {
     throw error;

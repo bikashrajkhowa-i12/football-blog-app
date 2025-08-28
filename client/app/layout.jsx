@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { AppProviders } from "@/contexts/AppProviders";
-import AppShell from "@/components/shells/AppShell";
+import AppRedirect from "@/components/app-redirect/AppRedirect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,11 +22,18 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          src="https://accounts.google.com/gsi/client"
+          async
+          defer
+        ></script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppProviders>
-          <AppShell>{children}</AppShell>
+          <AppRedirect>{children}</AppRedirect>
         </AppProviders>
       </body>
     </html>

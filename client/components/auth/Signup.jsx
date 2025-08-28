@@ -20,11 +20,12 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import GoogleButton from "../GoogleButton";
+import GoogleButton from "./GoogleButton";
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 
 const Signup = () => {
-  const { modalType, isOpen, openModal, setIsOpen } = useAuthModal();
+  const { modalType, isOpen, openModal, closeModal, setIsOpen } =
+    useAuthModal();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const isActive = modalType === "signup" && isOpen;
 
@@ -32,6 +33,7 @@ const Signup = () => {
     <SignupForm
       className={isDesktop ? undefined : "px-4"}
       openModal={openModal}
+      closeModal={closeModal}
     />
   );
 

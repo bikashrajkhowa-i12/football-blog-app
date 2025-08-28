@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
+
+import { useAuth } from "@/contexts/auth/AuthContext";
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 
 import { Button } from "@/components/ui/button";
@@ -21,13 +23,12 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
 const Navbar = () => {
+  const { isAuthenticated = false, logout } = useAuth() || {};
   const { openModal } = useAuthModal();
-  const isAuthenticated = false; // TODO: read from authContext
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
   const links = [
@@ -65,7 +66,10 @@ const Navbar = () => {
               <UserRound size={16} /> Profile
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex items-center gap-2">
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onClick={() => logout()}
+          >
             <IconLogout size={16} /> Logout
           </DropdownMenuItem>
         </DropdownMenuGroup>

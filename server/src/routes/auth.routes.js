@@ -12,8 +12,10 @@ router.route("/logout").post(authController.logout);
 // Signup
 router.route("/signup").post(validate.signup, authController.signup);
 
-// Google
-router.route("/google").post(validate.google, authController.googleAuth);
+// Google (O-Auth 2.0)
+router
+  .route("/google/callback")
+  .get(validate.googleAuth, authController.googleAuth);
 
 // refreshToken
 router

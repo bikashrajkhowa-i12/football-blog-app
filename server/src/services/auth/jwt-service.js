@@ -1,7 +1,4 @@
 import jwt from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
-
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Generate short-lived access token (JWT)
 export const generateAccessToken = (user) => {
@@ -41,16 +38,12 @@ export const verifyRefreshToken = (token) => {
   }
 };
 
-// Verify Google ID token and return user payload
-export const verifyGoogleToken = async (idToken) => {
+// Decode JWT tokens
+export const decodeIdToken = (idToken) => {
   try {
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    return ticket.getPayload();
-  } catch (err) {
-    throw new Error("Invalid Google token");
+    return jwt.decode(idToken);
+  } catch (error) {
+    throw error;
   }
 };
 

@@ -13,9 +13,14 @@ export const AuthModalProvider = ({ children }) => {
     setModalType(type);
   };
 
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalType(null);
+  };
+
   return (
     <AuthModalContext.Provider
-      value={{ isOpen, modalType, openModal, setIsOpen }}
+      value={{ isOpen, modalType, openModal, closeModal, setIsOpen }}
     >
       {children}
     </AuthModalContext.Provider>
