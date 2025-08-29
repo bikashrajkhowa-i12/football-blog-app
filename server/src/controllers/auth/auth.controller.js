@@ -11,7 +11,7 @@ const login = async (req, res) => {
         password,
       });
 
-    setAuthCookies(res, refreshToken);
+    setAuthCookies(res, accessToken, refreshToken);
 
     res.status(201).json({
       accessToken,
@@ -44,7 +44,7 @@ const signup = async (req, res) => {
     const { accessToken, refreshToken, user, isAuthenticated } =
       await authService.signup(signupDto);
 
-    setAuthCookies(res, refreshToken);
+    setAuthCookies(res, accessToken, refreshToken);
 
     res.status(201).json({
       accessToken,
@@ -74,9 +74,10 @@ const resetPassword = async (req, res) => {
 const googleAuth = async (req, res) => {
   try {
     const { code } = req?.query;
-    const { refreshToken } = await authService.authenticateWithGoogle(code);
+    const { accessToken, refreshToken } =
+      await authService.authenticateWithGoogle(code);
 
-    setAuthCookies(res, refreshToken);
+    setAuthCookies(res, accessToken, refreshToken);
 
     res.redirect(process.env.FRONTEND_URL);
   } catch (error) {
@@ -93,6 +94,9 @@ const refreshAccessToken = async (req, res) => {
     const token = req.refreshToken;
     const { newAccessToken, user, isAuthenticated } =
       await authService.renewAuthTokens(token);
+
+    setAuthCookies(res, newAccessToken, token);
+
     res
       .status(201)
       .json({ accessToken: newAccessToken, user, isAuthenticated });

@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 import { Button } from "./ui/button";
 import { IconHomeFilled } from "@tabler/icons-react";
@@ -18,7 +20,7 @@ const Unauthorized = () => {
       </div>
 
       <div className="space-x-5">
-        <Link href="/">
+        <Link href="/home">
           <Button variant="ghost">
             <IconHomeFilled />
             Home

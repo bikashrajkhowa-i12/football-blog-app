@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useAuth } from "@/contexts/auth/AuthContext";
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +31,6 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { IconPaperclip } from "@tabler/icons-react";
-import Unauthorized from "@/components/UnAuthorized";
 
 const ProfilePage = () => {
   const { user = {}, isAuthenticated = false } = useAuth() || {};
@@ -100,9 +101,7 @@ const ProfilePage = () => {
     console.log("✅ Account saved:", accountForm);
   };
 
-  return !isAuthorized ? (
-    <Unauthorized />
-  ) : (
+  return (
     <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 pt-2 pb-12 px-1">
       {/* Avatar */}
       <Card className="text-center py-8 shadow-sm border">
@@ -193,10 +192,10 @@ const ProfilePage = () => {
                       </span>
                     </div>
                     <Textarea
-                      id="about"
+                      id="bio"
                       value={personalForm?.bio || ""}
                       onChange={(e) =>
-                        handlePersonalChange("about", e.target.value)
+                        handlePersonalChange("bio", e.target.value)
                       }
                       placeholder="Write a short description..."
                       maxLength={1000}

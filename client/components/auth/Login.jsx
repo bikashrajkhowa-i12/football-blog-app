@@ -28,11 +28,27 @@ import { useLoader } from "@/contexts/LoaderContext";
 import callApi from "@/lib/callApi";
 import { useAuth } from "@/contexts/auth/AuthContext";
 import GoogleButton from "./GoogleButton";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { AlertCircleIcon } from "lucide-react";
 
 const Login = () => {
   const { modalType, isOpen, openModal, closeModal, setIsOpen } =
     useAuthModal();
+  const [error, setError] = React.useState(null);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const alert = error && (
+    //TODO: Create error mapping based on backend error codes
+    <Alert variant="destructive" className="text-start">
+      <AlertCircleIcon />
+      <AlertTitle>Unable to login</AlertTitle>
+      <AlertDescription>
+        <ul className="list-inside list-disc text-sm">
+          <li>{error?.message || ""}</li>
+        </ul>
+      </AlertDescription>
+    </Alert>
+  );
 
   if (isDesktop) {
     return (
@@ -41,8 +57,13 @@ const Login = () => {
           <DialogHeader>
             <DialogTitle>Welcome Back!</DialogTitle>
             <DialogDescription>Login to see the latest news!</DialogDescription>
+            {alert}
           </DialogHeader>
-          <LoginForm openModal={openModal} closeModal={closeModal} />
+          <LoginForm
+            openModal={openModal}
+            closeModal={closeModal}
+            setError={setError}
+          />
         </DialogContent>
       </Dialog>
     );
@@ -54,18 +75,20 @@ const Login = () => {
         <DrawerHeader className="text-left">
           <DrawerTitle>Welcome Back!</DrawerTitle>
           <DrawerDescription>Login to see the latest news!</DrawerDescription>
+          {alert}
         </DrawerHeader>
         <LoginForm
           className="px-4"
           openModal={openModal}
           closeModal={closeModal}
+          setError={setError}
         />
       </DrawerContent>
     </Drawer>
   );
 };
 
-const LoginForm = ({ className, openModal, closeModal }) => {
+const LoginForm = ({ className, openModal, closeModal, setError }) => {
   const { login } = useAuth() || {};
   const { startLoading, stopLoading } = useLoader();
   const [formData, setFormData] = React.useState({
@@ -74,16 +97,18 @@ const LoginForm = ({ className, openModal, closeModal }) => {
   });
 
   const handleChange = (e) => {
+    setError(null);
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
   const onClickLogin = async (e) => {
     e.preventDefault();
+    setError(null);
+    startLoading({ prompt: "Logging in..." });
 
     if (isEmpty(formData)) return;
 
     try {
-      startLoading({ prompt: "Logging in..." });
       const response = await callApi({
         method: "POST",
         url: "/auth/login",
@@ -92,7 +117,7 @@ const LoginForm = ({ className, openModal, closeModal }) => {
       login(response?.data?.user, response?.data?.accessToken);
       closeModal();
     } catch (error) {
-      console.log("Error: ", error?.message);
+      setError(error);
     } finally {
       stopLoading();
     }
@@ -115,7 +140,7 @@ const LoginForm = ({ className, openModal, closeModal }) => {
             onChange={handleChange}
             placeholder=" "
             autoComplete="email"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-400 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="email"
@@ -132,7 +157,7 @@ const LoginForm = ({ className, openModal, closeModal }) => {
             onChange={handleChange}
             placeholder=" "
             autoComplete="current-password"
-            className="peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
+            className="peer block w-full appearance-none border-b-2 border-gray-400 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm"
           />
           <Label
             htmlFor="password"
@@ -165,7 +190,7 @@ const LoginForm = ({ className, openModal, closeModal }) => {
             </Label>
           </div>
         </div>
-        <Button type="submit" variant="success" size="lg" className="mt-4">
+        <Button type="submit" size="lg" className="mt-4">
           Login
         </Button>
       </form>

@@ -7,9 +7,9 @@ export const AppProviders = ({ children }) => {
   return (
     <LoaderProvider>
       <ToastProvider>
-        <AuthModalProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </AuthModalProvider>
+        <AuthProvider>
+          <AuthModalProvider>{children}</AuthModalProvider>
+        </AuthProvider>
       </ToastProvider>
     </LoaderProvider>
   );

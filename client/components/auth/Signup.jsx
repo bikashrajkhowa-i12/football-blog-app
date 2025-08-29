@@ -22,10 +22,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GoogleButton from "./GoogleButton";
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
+import { isEmpty } from "lodash";
+import { useLoader } from "@/contexts/LoaderContext";
+import callApi from "@/lib/callApi";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { AlertCircleIcon } from "lucide-react";
+import { useAuth } from "@/contexts/auth/AuthContext";
 
 const Signup = () => {
   const { modalType, isOpen, openModal, closeModal, setIsOpen } =
     useAuthModal();
+  const [error, setError] = React.useState(null);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const isActive = modalType === "signup" && isOpen;
 
@@ -34,7 +41,21 @@ const Signup = () => {
       className={isDesktop ? undefined : "px-4"}
       openModal={openModal}
       closeModal={closeModal}
+      setError={setError}
     />
+  );
+
+  const alert = error && (
+    //TODO: Create error mapping based on backend error codes
+    <Alert variant="destructive" className="text-start">
+      <AlertCircleIcon />
+      <AlertTitle>Unable to signup</AlertTitle>
+      <AlertDescription>
+        <ul className="list-inside list-disc text-sm">
+          <li>{error?.message || ""}</li>
+        </ul>
+      </AlertDescription>
+    </Alert>
   );
 
   return isDesktop ? (
@@ -45,6 +66,7 @@ const Signup = () => {
           <DialogDescription>
             Sign up and join us to see the latest news!
           </DialogDescription>
+          {alert}
         </DialogHeader>
         {content}
       </DialogContent>
@@ -57,6 +79,7 @@ const Signup = () => {
           <DrawerDescription>
             Sign up and join us to see the latest news!
           </DrawerDescription>
+          {alert}
         </DrawerHeader>
         {content}
       </DrawerContent>
@@ -64,16 +87,49 @@ const Signup = () => {
   );
 };
 
-const SignupForm = ({ className, openModal }) => {
-  const handleSubmit = (e) => {
+const SignupForm = ({ className, openModal, closeModal, setError }) => {
+  const { login } = useAuth() || {};
+  const { startLoading, stopLoading } = useLoader();
+  const [formData, setFormData] = React.useState({
+    email: "",
+    password: "",
+    confirm_password: "",
+  });
+
+  const handleChange = (e) => {
+    setError(null);
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const onClickSignup = async (e) => {
+    setError(null);
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const values = Object.fromEntries(formData.entries());
-    console.log(values);
+
+    startLoading({ prompt: "Signing you in ..." });
+
+    if (!formData || isEmpty(formData)) return;
+
+    try {
+      const response = await callApi({
+        method: "POST",
+        url: "/auth/signup",
+        data: formData,
+      });
+      login(response?.data?.user, response?.data.accessToken);
+      closeModal();
+    } catch (error) {
+      setError(error);
+    } finally {
+      stopLoading();
+    }
   };
 
   const inputClasses =
-    "peer block w-full appearance-none border-b-2 border-gray-300 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm";
+    "peer block w-full appearance-none border-b-2 border-gray-400 bg-transparent p-2 text-gray-900 focus:outline-none focus:border-blue-600 focus:ring-0 sm:text-sm rounded-sm";
 
   const labelClasses =
     "absolute left-2 top-0 -translate-y-5 scale-75 transform origin-[0] bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:translate-y-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gray-600";
@@ -85,13 +141,15 @@ const SignupForm = ({ className, openModal }) => {
           "flex flex-col gap-6 w-full max-w-[360px] mx-auto mb-6",
           className
         )}
-        onSubmit={handleSubmit}
+        onSubmit={onClickSignup}
       >
         <div className="relative w-full">
           <Input
             id="email"
             name="email"
             type="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder=" "
             autoComplete="email"
             className={inputClasses}
@@ -100,11 +158,14 @@ const SignupForm = ({ className, openModal }) => {
             Email
           </Label>
         </div>
+
         <div className="relative w-full">
           <Input
             id="password"
             name="password"
             type="password"
+            value={formData.password}
+            onChange={handleChange}
             placeholder=" "
             autoComplete="new-password"
             className={inputClasses}
@@ -113,11 +174,14 @@ const SignupForm = ({ className, openModal }) => {
             Create password
           </Label>
         </div>
+
         <div className="relative w-full">
           <Input
             id="confirm_password"
             name="confirm_password"
             type="password"
+            value={formData.confirm_password}
+            onChange={handleChange}
             placeholder=" "
             autoComplete="new-password"
             className={inputClasses}
@@ -126,7 +190,8 @@ const SignupForm = ({ className, openModal }) => {
             Confirm password
           </Label>
         </div>
-        <Button type="submit" variant="success" size="lg" className="mt-4">
+
+        <Button type="submit" size="lg" className="mt-4">
           Sign up
         </Button>
       </form>

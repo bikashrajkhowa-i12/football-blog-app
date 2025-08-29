@@ -8,7 +8,14 @@ const cookieBaseOptions = {
       : "localhost",
 };
 
-const setAuthCookies = (res, refreshToken) => {
+const setAuthCookies = (res, accessToken, refreshToken) => {
+  // HttpOnly access token
+  res.cookie("accessToken", accessToken, {
+    ...cookieBaseOptions,
+    httpOnly: true,
+    maxAge: 15 * 60 * 1000, // 15 min
+  });
+
   // HttpOnly refresh token
   res.cookie("refreshToken", refreshToken, {
     ...cookieBaseOptions,
@@ -25,6 +32,11 @@ const setAuthCookies = (res, refreshToken) => {
 };
 
 const clearAuthCookies = (res) => {
+  res.clearCookie("accessToken", {
+    ...cookieBaseOptions,
+    httpOnly: true,
+  });
+
   res.clearCookie("refreshToken", {
     ...cookieBaseOptions,
     httpOnly: true,
