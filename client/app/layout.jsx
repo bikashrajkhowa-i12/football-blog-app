@@ -3,6 +3,7 @@ import "./globals.css";
 
 import { AppProviders } from "@/contexts/AppProviders";
 import AuthPanel from "@/components/auth/AuthPanel";
+import NProgressBar from "@/components/NProgressBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppProviders>
+          <NProgressBar />
           <AuthPanel />
           {children}
         </AppProviders>

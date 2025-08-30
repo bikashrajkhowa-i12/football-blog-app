@@ -120,3 +120,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+#nprogress {
+  @apply pointer-events-none;
+}
+
+#nprogress .bar {
+  @apply fixed top-0 left-0 w-full h-1 bg-blue-500 z-[9999];
+}
+
+#nprogress .peg {
+  @apply block absolute right-0 w-24 h-full opacity-75;
+  box-shadow: 0 0 10px theme("colors.blue.500"),
+    0 0 5px theme("colors.blue.500");
+  transform: rotate(3deg) translate(0, -4px);
+}
