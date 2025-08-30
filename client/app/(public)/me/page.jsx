@@ -31,10 +31,10 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { IconPaperclip } from "@tabler/icons-react";
+import UnauthenticatedPage from "@/app/unauthenticated/page";
 
 const ProfilePage = () => {
   const { user = {}, isAuthenticated = false } = useAuth() || {};
-  const [isAuthorized, setIsAuthorized] = useState(false);
   const [personalForm, setPersonalForm] = useState({
     name: "",
     username: "",
@@ -50,7 +50,6 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (user && isAuthenticated) {
-      setIsAuthorized(true);
       setPersonalForm({
         name: user?.name || "",
         username: user?.username || "",
@@ -64,9 +63,8 @@ const ProfilePage = () => {
         timezone: "GMT+5:30",
       });
     } else {
-      setIsAuthorized(false);
     }
-  }, [user, isAuthenticated, isAuthorized]);
+  }, [user, isAuthenticated]);
 
   const initials = personalForm?.name
     ? personalForm?.name
@@ -101,7 +99,7 @@ const ProfilePage = () => {
     console.log("✅ Account saved:", accountForm);
   };
 
-  return (
+  return isAuthenticated ? (
     <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 pt-2 pb-12 px-1">
       {/* Avatar */}
       <Card className="text-center py-8 shadow-sm border">
@@ -298,6 +296,8 @@ const ProfilePage = () => {
         </AccordionItem>
       </Accordion>
     </div>
+  ) : (
+    <UnauthenticatedPage />
   );
 };
 

@@ -1,12 +1,16 @@
 "use client";
 
+import { useLoader } from "@/contexts/LoaderContext";
 import { FcGoogle } from "react-icons/fc";
 
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI;
 
 export default function GoogleButton() {
+  const { loading, startLoading, stopLoading } = useLoader();
+
   const handleLogin = async () => {
+    startLoading({});
     const res = await fetch("/api/auth/google-state"); //nextjs server
     const data = await res.json();
     const state = data.state;
@@ -23,11 +27,13 @@ export default function GoogleButton() {
         state,
       }).toString();
 
+    stopLoading();
     window.location.href = googleAuthUrl;
   };
 
   return (
     <button
+      disabled={loading}
       onClick={handleLogin}
       className="w-full bg-white text-md flex justify-center gap-3 px-4 py-2 rounded-lg shadow-lg opacity-70 cursor-pointer
                  hover:opacity-80 hover:bg-gray-300 active:opacity-100 active:bg-gray-300 transition duration-300"

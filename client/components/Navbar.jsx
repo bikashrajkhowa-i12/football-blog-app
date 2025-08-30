@@ -27,7 +27,7 @@ import {
 } from "./ui/dropdown-menu";
 
 const Navbar = () => {
-  const { isAuthenticated = false, logout } = useAuth() || {};
+  const { isAuthenticated = false, user = {}, logout } = useAuth() || {};
   const { openModal } = useAuthModal();
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
@@ -48,39 +48,54 @@ const Navbar = () => {
     </div>
   );
 
-  const ProfilePopOver = () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="h-11 w-11 rounded-full cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>ER</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-40 bg-zinc-950 text-white"
-        align="start"
-      >
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link href="/me" className="flex items-center gap-2">
-              <UserRound size={16} /> Profile
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="flex items-center gap-2"
-            onClick={() => logout()}
-          >
-            <IconLogout size={16} /> Logout
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  const ProfilePopOver = () => {
+    const optionStyles = `flex items-center gap-2 rounded-lg cursor-pointer 
+               data-[highlighted]:text-white
+               data-[highlighted]:bg-zinc-800
+               transition-colors duration-200`;
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar className="h-8 w-8 md:h-11 md:w-11 rounded-full cursor-pointer">
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>ER</AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="w-40 bg-zinc-950 text-white border-none"
+          align="start"
+        >
+          <DropdownMenuGroup>
+            {isAuthenticated && user?.role === "admin" && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin" className={optionStyles}>
+                  <UserRound size={16} /> Admin view
+                </Link>
+              </DropdownMenuItem>
+            )}
+
+            <DropdownMenuItem asChild>
+              <Link href="/me" className={optionStyles}>
+                <UserRound size={16} /> Profile
+              </Link>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              className={optionStyles}
+              onSelect={() => logout()}
+            >
+              <IconLogout size={16} /> Logout
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
 
   return (
     <header className="fixed top-0 w-screen z-50 flex justify-center">
       <nav className="bg-white border-b md:border-gray-300 w-full">
-        <div className="max-w-screen-xl mx-auto px-4 py-4 flex items-center justify-between space-x-5">
+        <div className="max-w-screen-xl mx-auto px-4 py-0.5 flex items-center justify-between space-x-5">
           {/* Mobile Sheet */}
           <div className="md:hidden">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>

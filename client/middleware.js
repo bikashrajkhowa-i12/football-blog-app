@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const ADMIN_ROUTES = ["/admin"];
-const LOGIN_ROUTES = ["/me"];
 
-// Helper to verify JWT asynchronously
+// NOTE: handling profile routes at page level
+// const LOGIN_ROUTES = ["/me"];
+
 const verifyToken = async (token) => {
   try {
     const { payload } = await jwtVerify(
@@ -25,7 +26,7 @@ export const middleware = async (req) => {
   const user = token ? await verifyToken(token) : null;
 
   const isAdminRoute = ADMIN_ROUTES.some((route) => pathname.startsWith(route));
-  const isLoginRoute = LOGIN_ROUTES.some((route) => pathname === route);
+  // const isLoginRoute = LOGIN_ROUTES.some((route) => pathname === route);
 
   if (isAdminRoute) {
     if (!user) {
@@ -38,12 +39,12 @@ export const middleware = async (req) => {
     }
   }
 
-  if (isLoginRoute) {
-    if (!user) {
-      url.pathname = "/unauthenticated";
-      return NextResponse.redirect(url);
-    }
-  }
+  // if (isLoginRoute) {
+  //   if (!user) {
+  //     url.pathname = "/unauthenticated";
+  //     return NextResponse.redirect(url);
+  //   }
+  // }
 
   return NextResponse.next();
 };

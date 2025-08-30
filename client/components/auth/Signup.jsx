@@ -89,7 +89,7 @@ const Signup = () => {
 
 const SignupForm = ({ className, openModal, closeModal, setError }) => {
   const { login } = useAuth() || {};
-  const { startLoading, stopLoading } = useLoader();
+  const { loading, startLoading, stopLoading } = useLoader();
   const [formData, setFormData] = React.useState({
     email: "",
     password: "",
@@ -191,7 +191,7 @@ const SignupForm = ({ className, openModal, closeModal, setError }) => {
           </Label>
         </div>
 
-        <Button type="submit" size="lg" className="mt-4">
+        <Button disabled={loading} type="submit" size="lg" className="mt-4">
           Sign up
         </Button>
       </form>

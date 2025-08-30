@@ -1,99 +1,126 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+// app/page.tsx
+"use client";
 
-const Home = () => {
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/ui/avatar";
+
+export default function Home() {
   const featuredArticles = [
     {
       id: 1,
-      title: "Top 10 Football Moments of 2025",
-      description:
-        "Relive the most unforgettable football highlights from this year’s tournaments.",
-      date: "Aug 25, 2025",
-      category: "Highlights",
+      title: "Barcelona Thrash Real Madrid 4-0",
+      summary:
+        "An unforgettable El Clasico with stunning goals from young stars.",
+      image: "/images/barcelona-vs-madrid.jpg",
+      author: "John Doe",
+      category: "La Liga",
     },
     {
       id: 2,
-      title: "Tactical Analysis: Why Team X Dominates",
-      description:
-        "Get deep insights into the strategy behind Team X’s success on the field.",
-      date: "Aug 20, 2025",
-      category: "Analysis",
+      title: "Premier League: Manchester United Back on Top",
+      summary:
+        "After a tough season, Manchester United rises with a thrilling win.",
+      image: "/images/manu-vs-chelsea.jpg",
+      author: "Jane Smith",
+      category: "Premier League",
     },
     {
       id: 3,
-      title: "Upcoming Football Fixtures & Predictions",
-      description:
-        "Stay ahead with expert predictions for the upcoming matches across leagues.",
-      date: "Aug 15, 2025",
-      category: "Previews",
+      title: "Bundesliga Highlights: Bayern Dominates",
+      summary:
+        "Bayern Munich showcases their attacking prowess in a 5-1 victory.",
+      image: "/images/bayern-vs-dortmund.jpg",
+      author: "Alex Müller",
+      category: "Bundesliga",
     },
   ];
+
   return (
-    <>
-      <section className="max-w-5xl mx-auto text-center">
-        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
-          Welcome to <span className="text-green-900">FootScribe90</span>
-        </h1>
-        <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
-          Your ultimate source for football news, in-depth analysis, and live
-          updates — all tailored for passionate fans.
-        </p>
-        <div className="flex justify-center gap-4">
-          <Button size="lg" variant="dark">
-            Read Latest Articles
-          </Button>
-          <Button size="lg" variant="outline">
-            Subscribe Now
+    <main className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section
+        className="relative h-[450px] md:h-[600px] flex items-center justify-center text-center text-white"
+        style={{
+          backgroundImage: "url('/images/hero-football.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black/50 rounded-2xl"></div>
+        <div className="relative space-y-4 max-w-2xl px-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
+            Footscribe90 – Live Football Updates
+          </h1>
+          <p className="text-lg md:text-xl drop-shadow-md">
+            Scores, highlights, and expert analysis from the biggest leagues
+            around the world.
+          </p>
+          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 font-semibold">
+            Explore Latest
           </Button>
         </div>
       </section>
 
       {/* Featured Articles */}
-      <section className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-2 border-b pb-2 border-gray-200">
-          Featured Articles
+      <section className="px-4 md:px-16 py-12 grid gap-8 md:grid-cols-3">
+        {featuredArticles.map((article) => (
+          <Card
+            key={article.id}
+            className="group hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden rounded-2xl"
+          >
+            <img
+              src={article.image}
+              alt={article.title}
+              className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <CardContent className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
+              <span className="text-xs font-bold uppercase bg-indigo-600 px-2 py-1 rounded">
+                {article.category}
+              </span>
+              <CardTitle className="mt-2 text-lg font-bold">
+                {article.title}
+              </CardTitle>
+              <p className="text-sm mt-1">{article.summary}</p>
+              <div className="flex items-center gap-2 mt-3">
+                <Avatar>
+                  <img
+                    src={`/avatars/${article.author
+                      .replace(" ", "-")
+                      .toLowerCase()}.jpg`}
+                    alt={article.author}
+                  />
+                </Avatar>
+                <span className="text-xs">{article.author}</span>
+              </div>
+              <Button className="mt-3 bg-indigo-600 hover:bg-indigo-700 w-full text-white">
+                Read More
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+
+      {/* Newsletter CTA */}
+      <section className="bg-indigo-600 text-white rounded-2xl p-10 mx-4 md:mx-16 text-center space-y-6 relative overflow-hidden">
+        <h2 className="text-2xl md:text-3xl font-bold">
+          Stay Updated with Footscribe90
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredArticles.map(
-            ({ id, title, description, date, category }) => (
-              <Card key={id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <Badge variant="secondary" className="mb-2">
-                    {category}
-                  </Badge>
-                  <CardTitle className="text-xl">{title}</CardTitle>
-                  <CardDescription className="text-sm text-gray-500">
-                    {date}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700">{description}</p>
-                </CardContent>
-              </Card>
-            )
-          )}
+        <p>
+          Get latest news, match analysis, and highlights straight to your
+          inbox.
+        </p>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="p-3 rounded-lg text-gray-900 flex-1 min-w-[250px]"
+          />
+          <Button className="bg-white text-indigo-600 hover:bg-gray-100 px-6 py-3">
+            Subscribe
+          </Button>
         </div>
       </section>
-
-      {/* Call to Action */}
-      <section className="max-w-5xl mx-auto text-center mt-20">
-        <h2 className="text-3xl font-semibold mb-4">
-          Join Thousands of Football Fans
-        </h2>
-        <p className="text-gray-700 mb-6 max-w-xl mx-auto">
-          Subscribe to our newsletter for exclusive insights and stay updated
-          with every kick on the pitch.
-        </p>
-      </section>
-    </>
+    </main>
   );
-};
-
-export default Home;
+}

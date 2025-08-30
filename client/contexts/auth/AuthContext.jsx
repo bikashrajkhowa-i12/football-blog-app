@@ -8,8 +8,11 @@ import { useLoader } from "../LoaderContext";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialAuthState);
+export const AuthProvider = ({ children, initialAuth = false }) => {
+  const [state, dispatch] = useReducer(authReducer, {
+    ...initialAuthState,
+    isAuthenticated: initialAuth,
+  });
   const { startLoading, stopLoading } = useLoader();
 
   useEffect(() => {

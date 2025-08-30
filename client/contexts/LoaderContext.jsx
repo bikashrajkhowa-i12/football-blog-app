@@ -11,7 +11,7 @@ export const LoaderProvider = ({ children }) => {
   });
 
   const startLoading = ({ prompt = "Loading..." }) => {
-    setLoaderState({ loading: true, prompt });
+    setLoaderState({ loading: true, prompt: prompt ? prompt : "Loading..." });
   };
 
   const stopLoading = () => {

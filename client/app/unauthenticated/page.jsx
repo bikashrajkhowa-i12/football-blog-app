@@ -11,21 +11,21 @@ export default function UnauthenticatedPage() {
   const { openModal } = useAuthModal();
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-300 p-6 text-center">
-      <div className="max-w-md bg-white shadow-md rounded-2xl p-8 space-y-6">
+    <main className="h-auto flex flex-col items-center justify-start bg-inherit p-6 text-center">
+      <div className="max-w-md bg-white shadow-md rounded-2xl p-6 md:p-10 space-y-6">
         {/* Icon + Title */}
         <div className="flex flex-col items-center space-y-2">
           <ShieldAlert className="h-12 w-12 text-yellow-600" />
-          <h1 className="text-2xl font-extrabold text-yellow-600">
+          <h1 className="text-2xl font-extrabold text-gray-900">
             Access Restricted
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 tracking-tight">
             You’re not signed in yet. Don’t worry — you’re just one step away!
           </p>
         </div>
 
         {/* Rules Section */}
-        <div className="text-left space-y-2">
+        <div className="md:ml-10 text-left space-y-2">
           <h2 className="text-lg font-semibold text-gray-700">
             Mandatory Rules 📜
           </h2>
