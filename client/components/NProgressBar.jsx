@@ -7,8 +7,8 @@ import NProgress from "nprogress";
 NProgress.configure({
   showSpinner: false,
   trickleSpeed: 1000, // ms between increments
-  minimum: 0.4, // where the bar starts (default is 0.08)
-  speed: 800,
+  minimum: 0.8, // where the bar starts (default is 0.08)
+  speed: 1500,
 });
 
 const NProgressBar = () => {

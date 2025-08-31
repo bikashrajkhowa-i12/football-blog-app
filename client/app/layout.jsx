@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppProviders } from "@/contexts/AppProviders";
 import AuthPanel from "@/components/auth/AuthPanel";
 import NProgressBar from "@/components/NProgressBar";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <AppProviders>
           <NProgressBar />
           <AuthPanel />
+          <ScrollToTop />
           {children}
         </AppProviders>
       </body>

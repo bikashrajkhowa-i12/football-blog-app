@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# debug-config
+.vscode/*
+!.vscode/launch.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*

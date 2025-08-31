@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/accordion";
 import { IconPaperclip } from "@tabler/icons-react";
 import UnauthenticatedPage from "@/app/unauthenticated/page";
+import BackButton from "@/components/BackButton";
 
 const ProfilePage = () => {
   const { user = {}, isAuthenticated = false } = useAuth() || {};
@@ -101,6 +102,7 @@ const ProfilePage = () => {
 
   return isAuthenticated ? (
     <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 pt-2 pb-12 px-1">
+      <BackButton />
       {/* Avatar */}
       <Card className="text-center py-8 shadow-sm border">
         <div className="flex flex-col items-center gap-2">

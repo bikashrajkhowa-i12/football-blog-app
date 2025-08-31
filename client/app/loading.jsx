@@ -8,7 +8,7 @@ export default function Loading() {
       <div className="flex flex-col items-center justify-center gap-4">
         <Spinner className="text-white" size="64" />
         <span className="text-muted-foreground text-sm text-sky-500">
-          {prompt || "Loading..."}
+          Loading...
         </span>
       </div>
     </div>

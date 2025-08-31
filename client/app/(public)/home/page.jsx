@@ -1,126 +1,207 @@
-// app/page.tsx
 "use client";
-
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { blogs } from "@/demo/data";
+import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { motion } from "framer-motion";
 
-export default function Home() {
-  const featuredArticles = [
-    {
-      id: 1,
-      title: "Barcelona Thrash Real Madrid 4-0",
-      summary:
-        "An unforgettable El Clasico with stunning goals from young stars.",
-      image: "/images/barcelona-vs-madrid.jpg",
-      author: "John Doe",
-      category: "La Liga",
-    },
-    {
-      id: 2,
-      title: "Premier League: Manchester United Back on Top",
-      summary:
-        "After a tough season, Manchester United rises with a thrilling win.",
-      image: "/images/manu-vs-chelsea.jpg",
-      author: "Jane Smith",
-      category: "Premier League",
-    },
-    {
-      id: 3,
-      title: "Bundesliga Highlights: Bayern Dominates",
-      summary:
-        "Bayern Munich showcases their attacking prowess in a 5-1 victory.",
-      image: "/images/bayern-vs-dortmund.jpg",
-      author: "Alex Müller",
-      category: "Bundesliga",
-    },
-  ];
+// ---------------- Hero Carousel ----------------
+const HeroCarousel = ({ items }) => {
+  const [index, setIndex] = useState(0);
+  const intervalRef = useRef();
+
+  useEffect(() => {
+    start();
+    return () => clear();
+  }, [items]);
+
+  const start = () => {
+    clear();
+    if (!items.length) return;
+    intervalRef.current = setInterval(() => {
+      setIndex((prev) => (prev + 1) % items.length);
+    }, 6000);
+  };
+
+  const clear = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  };
+
+  const next = () => {
+    setIndex((prev) => (prev + 1) % items.length);
+    start();
+  };
+  const prev = () => {
+    setIndex((prev) => (prev - 1 + items.length) % items.length);
+    start();
+  };
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section
-        className="relative h-[450px] md:h-[600px] flex items-center justify-center text-center text-white"
-        style={{
-          backgroundImage: "url('/images/hero-football.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+    <div className="relative w-full h-[400px] md:h-[600px] rounded-md overflow-hidden shadow-lg bg-white mb-10">
+      <Image
+        src={items[index]?.image_url || "/images/placeholder.jpg"}
+        alt={items[index]?.title}
+        fill
+        className="object-cover object-top"
+        priority
+      />
+      <div className="absolute inset-0 bg-black/60" />
+
+      {/* Animated Slide Content */}
+      <motion.div
+        key={index}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -30 }}
+        transition={{ duration: 0.6 }}
+        className="absolute bottom-20 left-10 max-w-2xl text-white"
       >
-        <div className="absolute inset-0 bg-black/50 rounded-2xl"></div>
-        <div className="relative space-y-4 max-w-2xl px-4">
-          <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg">
-            Footscribe90 – Live Football Updates
-          </h1>
-          <p className="text-lg md:text-xl drop-shadow-md">
-            Scores, highlights, and expert analysis from the biggest leagues
-            around the world.
-          </p>
-          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 font-semibold">
-            Explore Latest
-          </Button>
-        </div>
-      </section>
-
-      {/* Featured Articles */}
-      <section className="px-4 md:px-16 py-12 grid gap-8 md:grid-cols-3">
-        {featuredArticles.map((article) => (
-          <Card
-            key={article.id}
-            className="group hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden rounded-2xl"
-          >
-            <img
-              src={article.image}
-              alt={article.title}
-              className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-            <CardContent className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-              <span className="text-xs font-bold uppercase bg-indigo-600 px-2 py-1 rounded">
-                {article.category}
-              </span>
-              <CardTitle className="mt-2 text-lg font-bold">
-                {article.title}
-              </CardTitle>
-              <p className="text-sm mt-1">{article.summary}</p>
-              <div className="flex items-center gap-2 mt-3">
-                <Avatar>
-                  <img
-                    src={`/avatars/${article.author
-                      .replace(" ", "-")
-                      .toLowerCase()}.jpg`}
-                    alt={article.author}
-                  />
-                </Avatar>
-                <span className="text-xs">{article.author}</span>
-              </div>
-              <Button className="mt-3 bg-indigo-600 hover:bg-indigo-700 w-full text-white">
-                Read More
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
-
-      {/* Newsletter CTA */}
-      <section className="bg-indigo-600 text-white rounded-2xl p-10 mx-4 md:mx-16 text-center space-y-6 relative overflow-hidden">
-        <h2 className="text-2xl md:text-3xl font-bold">
-          Stay Updated with Footscribe90
+        <h2 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">
+          {items[index]?.title}
         </h2>
-        <p>
-          Get latest news, match analysis, and highlights straight to your
-          inbox.
+        <p className="text-sm md:text-base drop-shadow-md line-clamp-3">
+          {items[index]?.preview || items[index]?.content?.summary || ""}
         </p>
-        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="p-3 rounded-lg text-gray-900 flex-1 min-w-[250px]"
-          />
-          <Button className="bg-white text-indigo-600 hover:bg-gray-100 px-6 py-3">
-            Subscribe
+        <Link href={`/blog/${items[index]?.slug || "#"}`}>
+          <Button className="mt-5 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-xl font-semibold">
+            Explore Post
+          </Button>
+        </Link>
+      </motion.div>
+
+      {/* Arrows */}
+      <button
+        onClick={prev}
+        className="absolute top-1/2 left-4 -translate-y-1/2 bg-white/60 hover:bg-white/90 text-indigo-600 p-2 rounded-full shadow"
+      >
+        <FaChevronLeft />
+      </button>
+      <button
+        onClick={next}
+        className="absolute top-1/2 right-4 -translate-y-1/2 bg-white/60 hover:bg-white/90 text-indigo-600 p-2 rounded-full shadow"
+      >
+        <FaChevronRight />
+      </button>
+    </div>
+  );
+};
+
+// ---------------- Blog Grid ----------------
+const BlogGrid = ({ title, blogs, initialCount = 6, step = 3 }) => {
+  const [visibleCount, setVisibleCount] = useState(initialCount);
+
+  const loadMore = () => {
+    setVisibleCount((prev) => Math.min(prev + step, blogs.length));
+  };
+
+  return (
+    <section className="max-w-6xl mx-auto w-full py-6">
+      <h2 className="text-3xl text-gray-800 font-bold mb-8">{title}</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
+        {blogs.slice(0, visibleCount).map((blog, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, delay: idx * 0.1 }}
+          >
+            <Link href={`/blog/${blog.slug}`} className="group">
+              <Card className="relative h-full flex flex-col overflow-hidden">
+                <div className="relative w-full h-52 overflow-hidden">
+                  <Image
+                    src={blog.image_url || "/images/placeholder.jpg"}
+                    alt={blog.title}
+                    fill
+                    className="object-cover transform transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <CardContent className="mt-1">
+                  <h3 className="text-md font-bold text-gray-800 group-hover:text-indigo-700 group-hover:underline line-clamp-2">
+                    {blog.title}
+                  </h3>
+                </CardContent>
+              </Card>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Load More Button */}
+      {visibleCount < blogs.length && (
+        <div className="flex justify-center mt-10">
+          <Button
+            variant="secondary"
+            className="rounded-full"
+            onClick={loadMore}
+          >
+            Load More
           </Button>
         </div>
-      </section>
-    </main>
+      )}
+    </section>
   );
-}
+};
+
+// ---------------- Categories ----------------
+const Categories = () => {
+  const categories = [
+    "Match Reports",
+    "Transfers",
+    "Tactical Analysis",
+    "Injuries",
+    "Previews",
+  ];
+  return (
+    <section className="max-w-4xl mx-auto w-full">
+      <h3 className="text-lg font-semibold text-gray-700 mb-4">
+        Browse by Category
+      </h3>
+      <div className="flex flex-wrap gap-3">
+        {categories.map((cat) => (
+          <Badge
+            key={cat}
+            variant="secondary"
+            className="rounded-full opacity-80 cursor-pointer hover:bg-indigo-700 hover:text-white px-3 py-1"
+          >
+            {cat}
+          </Badge>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// ---------------- Home Page ----------------
+const Home = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  const featuredBlogs = blogs.filter((b) => b.published).slice(0, 6);
+  const latestBlogs = blogs
+    .filter((b) => !featuredBlogs.includes(b))
+    .slice(0, 12); // keep more for "Load More"
+
+  return (
+    <div className="flex flex-col items-center gap-16 pt-2 pb-10 px-4">
+      <div className="max-w-7xl">
+        {featuredBlogs.length > 0 && <HeroCarousel items={featuredBlogs} />}
+        {featuredBlogs.length > 0 && (
+          <BlogGrid title="Featured Posts" blogs={featuredBlogs} />
+        )}
+        {latestBlogs.length > 0 && (
+          <BlogGrid title="Latest Posts" blogs={latestBlogs} />
+        )}
+        <Categories />
+      </div>
+      <ScrollToTopButton />
+    </div>
+  );
+};
+
+export default Home;

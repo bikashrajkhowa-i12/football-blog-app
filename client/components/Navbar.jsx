@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { useAuth } from "@/contexts/auth/AuthContext";
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
@@ -30,9 +31,10 @@ const Navbar = () => {
   const { isAuthenticated = false, user = {}, logout } = useAuth() || {};
   const { openModal } = useAuthModal();
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const pathname = usePathname();
 
   const links = [
-    { title: "Home", path: "/" },
+    { title: "Home", path: "/home" },
     { title: "Latest", path: "/latest" },
     { title: "Leagues", path: "/leagues" },
     { title: "Teams", path: "/teams" },
@@ -118,16 +120,23 @@ const Navbar = () => {
                   </SheetDescription>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 px-4 py-2">
-                  {links.map((link) => (
-                    <Link
-                      key={link.title}
-                      href={link.path}
-                      className="text-base font-medium hover:text-blue-600"
-                      onClick={() => setIsSheetOpen(false)} // ✅ closes drawer on click
-                    >
-                      {link.title}
-                    </Link>
-                  ))}
+                  {links.map((link) => {
+                    const isActive = pathname === link.path;
+                    return (
+                      <Link
+                        key={link.title}
+                        href={link.path}
+                        className={`text-base font-medium transition-colors ${
+                          isActive
+                            ? "text-blue-600 font-semibold"
+                            : "text-gray-800 hover:text-blue-600"
+                        }`}
+                        onClick={() => setIsSheetOpen(false)} // ✅ closes drawer
+                      >
+                        {link.title}
+                      </Link>
+                    );
+                  })}
                 </nav>
               </SheetContent>
             </Sheet>
@@ -140,16 +149,23 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <ul className="hidden md:flex gap-6 items-center">
-            {links.map((link) => (
-              <li key={link.title}>
-                <Link
-                  href={link.path}
-                  className="text-lg font-medium hover:text-gray-600 transition-colors"
-                >
-                  {link.title}
-                </Link>
-              </li>
-            ))}
+            {links.map((link) => {
+              const isActive = pathname === link.path;
+              return (
+                <li key={link.title}>
+                  <Link
+                    href={link.path}
+                    className={`relative text-lg font-medium transition-colors pb-1 ${
+                      isActive
+                        ? "text-blue-600 font-semibold after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600"
+                        : "text-gray-800 hover:text-blue-600"
+                    }`}
+                  >
+                    {link.title}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           {/* Auth section */}
