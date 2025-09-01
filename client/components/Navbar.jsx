@@ -16,7 +16,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from "@/components/ui/sheet";
-import { Menu, UserRound } from "lucide-react";
+import { Menu, ShieldUser, UserRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { IconLogout } from "@tabler/icons-react";
 import {
@@ -26,6 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import AppLogo from "./AppLogo";
 
 const Navbar = () => {
   const { isAuthenticated = false, user = {}, logout } = useAuth() || {};
@@ -41,14 +42,6 @@ const Navbar = () => {
     { title: "Contact", path: "/contact" },
     { title: "About", path: "/about" },
   ];
-
-  const AppLogo = () => (
-    <div className="text-[30px] md:text-[40px] font-poppins tracking-tighter">
-      <span className="font-light text-gray-900">foot</span>
-      <span className="font-extrabold text-gray-900">scribe</span>
-      <span className="font-bold text-green-900">90</span>
-    </div>
-  );
 
   const ProfilePopOver = () => {
     const optionStyles = `flex items-center gap-2 rounded-lg cursor-pointer 
@@ -71,7 +64,7 @@ const Navbar = () => {
             {isAuthenticated && user?.role === "admin" && (
               <DropdownMenuItem asChild>
                 <Link href="/admin" className={optionStyles}>
-                  <UserRound size={16} /> Admin view
+                  <ShieldUser size={16} /> Admin view
                 </Link>
               </DropdownMenuItem>
             )}

@@ -118,7 +118,6 @@ const BlogPost = () => {
             <img
               src={blog.image_url || ""}
               alt={title}
-              fill
               className="object-content w-full h-full"
             />
           </div>
