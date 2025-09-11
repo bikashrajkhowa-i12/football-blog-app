@@ -20,17 +20,18 @@ import {
   SidebarMenuItem,
 } from "../ui/sidebar";
 import { useAuth } from "@/contexts/auth/AuthContext";
-import { redirect, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import LiveDateTime from "../LiveTime";
 import { Button } from "../ui/button";
 
 const AdminSidebar = () => {
   const { user = {}, logout } = useAuth();
+  const router = useRouter();
   const pathname = usePathname();
 
   const switchToApp = () => {
-    redirect("/home");
+    router.replace("/home");
   };
 
   const items = [

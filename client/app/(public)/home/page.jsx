@@ -6,9 +6,10 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { blogs } from "@/demo/data";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import { motion } from "framer-motion";
+import callApi from "@/lib/callApi";
+import Loader from "@/components/Loader";
 
 // ---------------- Hero Carousel ----------------
 const HeroCarousel = ({ items }) => {
@@ -179,6 +180,31 @@ const Categories = () => {
 
 // ---------------- Home Page ----------------
 const Home = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        setLoading(true);
+        const response = await callApi({
+          method: "GET",
+          url: "/blogs",
+        });
+
+        const { blogs: list = [] } = response?.data || {};
+        setBlogs(list);
+      } catch (error) {
+        //TODO: setError
+        console.log(error?.message || "Failed to fetch blogs!");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBlogs();
+  }, []);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -188,7 +214,8 @@ const Home = () => {
     .slice(0, 12); // keep more for "Load More"
 
   return (
-    <div className="flex flex-col items-center gap-16 pt-2 pb-10 px-4">
+    <div className="flex flex-col items-center gap-16 pt-2 pb-10 px-4 min-h-screen">
+      <Loader loading={loading} />
       <div className="max-w-7xl">
         {featuredBlogs.length > 0 && <HeroCarousel items={featuredBlogs} />}
         {featuredBlogs.length > 0 && (
@@ -197,9 +224,9 @@ const Home = () => {
         {latestBlogs.length > 0 && (
           <BlogGrid title="Latest Posts" blogs={latestBlogs} />
         )}
-        <Categories />
+        {blogs.length > 0 && <Categories />}
       </div>
-      <ScrollToTopButton />
+      {blogs.length > 0 && <ScrollToTopButton />}
     </div>
   );
 };

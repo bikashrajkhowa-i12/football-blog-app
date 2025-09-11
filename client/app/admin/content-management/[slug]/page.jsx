@@ -22,8 +22,8 @@ const BlogPost = () => {
   const [blogs, setBlogs] = useState(null);
   const [comment, setComment] = useState(null);
   const { openModal } = useAuthModal() || {};
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchBlogDetails() {
@@ -247,7 +247,7 @@ const BlogPost = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-1 md:px-6 flex flex-col">
+    <div className="max-w-6xl mx-auto px-1 md:px-6 flex flex-col mt-8 ">
       <BackButton />
       <div className="max-w-4xl mx-auto w-full relative">
         <Loader loading={loading} />

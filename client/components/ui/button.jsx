@@ -23,6 +23,7 @@ const buttonVariants = cva(
         success:
           "bg-green-900 opacity-90 text-white shadow-xs hover:opacity-100 cursor-pointer",
         dark: "bg-gray-900 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
+        base: "bg-slate-900 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

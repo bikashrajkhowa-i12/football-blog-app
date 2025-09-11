@@ -1,16 +1,41 @@
 // app/blogs/page.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { blogs } from "@/demo/data"; // Your blogs array
 import Image from "next/image";
 import { motion } from "framer-motion";
+import callApi from "@/lib/callApi";
+import Loader from "@/components/Loader";
 
 const LatestBlogsPage = () => {
   const [visibleCount, setVisibleCount] = useState(6);
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchBlogs() {
+      try {
+        setLoading(true);
+        const response = await callApi({
+          method: "GET",
+          url: "/blogs",
+        });
+
+        const { blogs: list = [] } = response?.data || {};
+        setBlogs(list);
+      } catch (error) {
+        //TODO: setError
+        console.log(error?.message || "Failed to fetch blogs!");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBlogs();
+  }, []);
 
   const handleLoadMore = () => setVisibleCount((prev) => prev + 3);
 
@@ -26,6 +51,7 @@ const LatestBlogsPage = () => {
 
   return (
     <div className="flex flex-col items-center gap-10 py-10 px-4">
+      <Loader loading={loading} />
       <div className="max-w-7xl w-full">
         {/* Page Header */}
         <section className="text-center max-w-3xl mx-auto mb-12">

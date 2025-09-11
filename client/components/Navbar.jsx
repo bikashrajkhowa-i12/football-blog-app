@@ -89,7 +89,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 w-screen z-50 flex justify-center">
-      <nav className="bg-white border-b md:border-gray-300 w-full">
+      <nav className="backdrop-blur-lg bg-gray-200/50 w-full">
         <div className="max-w-screen-xl mx-auto px-4 py-0.5 flex items-center justify-between space-x-5">
           {/* Mobile Sheet */}
           <div className="md:hidden">
