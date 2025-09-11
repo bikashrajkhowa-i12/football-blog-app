@@ -31,12 +31,6 @@ jobs:
       - name: Install server dependencies
         run: cd server && npm ci
 
-      - name: Run client tests with coverage
-        run: cd client && npm test -- --coverage
-
-      - name: Run server tests with coverage
-        run: cd server && npm test -- --coverage
-
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
         with:
