@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 export async function GET() {
   const state = crypto.randomBytes(32).toString("hex");
