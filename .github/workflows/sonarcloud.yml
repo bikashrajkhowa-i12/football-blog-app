@@ -23,6 +23,9 @@ jobs:
       - name: Install client dependencies
         run: cd client && npm ci
 
+      - name: Setup .npmrc for private packages in server
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPMRC_TOKEN }}" > server/.npmrc
+
       - name: Install server dependencies
         run: cd server && npm ci
 
