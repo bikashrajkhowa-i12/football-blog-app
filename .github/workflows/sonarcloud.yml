@@ -24,8 +24,9 @@ jobs:
         run: cd client && npm ci
 
       - name: Setup .npmrc for private packages in server
-        echo "@bikashrajkhowa-i12:registry=https://npm.pkg.github.com" > server/.npmrc
-        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> server/.npmrc
+        run: |
+          echo "@bikashrajkhowa-i12:registry=https://npm.pkg.github.com" > server/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> server/.npmrc
 
       - name: Install server dependencies
         run: cd server && npm ci
