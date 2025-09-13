@@ -101,7 +101,7 @@ const ProfilePage = () => {
   };
 
   return isAuthenticated ? (
-    <div className="max-w-5xl mx-auto w-full flex flex-col gap-6 pt-2 pb-12 px-1">
+    <div className="max-w-3xl mx-auto w-full flex flex-col gap-6 pt-2 pb-12 px-1">
       <BackButton />
       {/* Avatar */}
       <Card className="text-center py-8 shadow-sm border">
@@ -144,7 +144,7 @@ const ProfilePage = () => {
       <Accordion
         type="multiple"
         defaultValue={["personal", "account"]}
-        className="max-w-3xl mx-auto w-full"
+        className="max-w-xl mx-auto w-full"
       >
         {/* Personal Info */}
         <AccordionItem value="personal" className="border rounded-lg bg-white">

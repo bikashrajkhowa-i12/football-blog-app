@@ -17,6 +17,8 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Menu, ShieldUser, UserRound } from "lucide-react";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
+
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { IconLogout } from "@tabler/icons-react";
 import {
@@ -161,18 +163,30 @@ const Navbar = () => {
             })}
           </ul>
 
-          {/* Auth section */}
-          {isAuthenticated ? (
-            <ProfilePopOver />
-          ) : (
-            <Button
-              className="ml-2"
-              variant="dark"
-              onClick={() => openModal("login")}
-            >
-              Login
-            </Button>
-          )}
+          <div className="flex justify-center items-center gap-4 md:gap-10">
+            {/** Write a blog icon */}
+
+            <Link href={"/blog/create"}>
+              <HiOutlinePencilSquare
+                size={28}
+                className="opacity-70 hover:opacity-100 cursor-pointer"
+                title="Write a blog"
+              />
+            </Link>
+
+            {/* Auth section */}
+            {isAuthenticated ? (
+              <ProfilePopOver />
+            ) : (
+              <Button
+                className="ml-2"
+                variant="dark"
+                onClick={() => openModal("login")}
+              >
+                Login
+              </Button>
+            )}
+          </div>
         </div>
       </nav>
     </header>

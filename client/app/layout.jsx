@@ -5,6 +5,7 @@ import { AppProviders } from "@/contexts/AppProviders";
 import AuthPanel from "@/components/auth/AuthPanel";
 import NProgressBar from "@/components/NProgressBar";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           <AuthPanel />
           <ScrollToTop />
           {children}
+          <Toaster position="top-right" richColors />
         </AppProviders>
       </body>
     </html>

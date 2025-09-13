@@ -16,14 +16,19 @@ const buttonVariants = cva(
         outline:
           "border-1 border-gray-300 bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 cursor-pointer",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80 cursor-pointer",
+          "bg-gray-700 text-white shadow-xs hover:bg-gray-800 cursor-pointer",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 cursor-pointer",
         link: "text-primary underline-offset-4 hover:underline cursor-pointer",
         success:
-          "bg-green-900 opacity-90 text-white shadow-xs hover:opacity-100 cursor-pointer",
-        dark: "bg-gray-900 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
-        base: "bg-slate-900 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
+          "bg-green-800 text-white shadow-xs hover:bg-green-900/90 cursor-pointer",
+        dark: "bg-zinc-800 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
+        base: "bg-cyan-100 text-gray-800 shadow-xs hover:opacity-90 cursor-pointer border border-cyan-200",
+        warning:
+          "bg-orange-400 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
+        danger:
+          "bg-red-800 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
+        info: "bg-cyan-400/90 text-gray-800 shadow-xs hover:bg-cyan-400 cursor-pointer",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
