@@ -11,7 +11,7 @@ const PublicLayout = ({ children }) => {
     <>
       <GlobalLoader loading={loading} prompt={prompt} />
       <Navbar />
-      <main className="flex-1 min-h-screen bg-white px-2 md:px-16 pt-2 pb-10 mt-16">
+      <main className="flex-1 min-h-screen bg-white px-0.5 md:px-16 pt-2 pb-10 mt-16">
         {children}
       </main>
       <Footer />

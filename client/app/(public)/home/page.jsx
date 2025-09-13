@@ -214,7 +214,7 @@ const Home = () => {
     .slice(0, 12); // keep more for "Load More"
 
   return (
-    <div className="flex flex-col items-center gap-16 pt-2 pb-10 px-4 min-h-screen">
+    <div className="flex flex-col items-center gap-16 pt-2 pb-10 md:px-4 min-h-screen">
       <Loader loading={loading} />
       <div className="max-w-7xl">
         {featuredBlogs.length > 0 && <HeroCarousel items={featuredBlogs} />}
