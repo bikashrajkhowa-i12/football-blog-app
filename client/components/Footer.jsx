@@ -88,7 +88,7 @@ const Footer = () => {
             <form className="flex flex-col sm:flex-row gap-3">
               <Input
                 type="email"
-                placeholder="Your email address"
+                placeholder="Enter your email"
                 aria-label="Email address"
                 className="rounded-md border border-gray-700 bg-gray-800 px-4 py-2 text-gray-100 placeholder-gray-500 focus:border-green-500 focus:outline-none sm:flex-1"
                 required

@@ -10,8 +10,8 @@ export default function UnauthorizedPage() {
   const router = useRouter();
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-red-50 to-red-100 p-6">
-      <Card className="max-w-md w-full border-red-300 shadow-lg rounded-2xl">
+    <main className="h-auto flex flex-col items-center justify-center bg-inherit p-6 text-start">
+      <Card className="max-w-md w-full shadow-lg rounded-2xl">
         <CardHeader className="flex flex-col items-center space-y-2">
           <LockKeyhole className="h-12 w-12 text-red-600" />
           <CardTitle className="text-2xl font-bold text-gray-900 uppercase tracking-wide">
