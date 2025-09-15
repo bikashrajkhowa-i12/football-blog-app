@@ -6,4 +6,5 @@ module.exports = {
   User: require("@bikashrajkhowa-i12/blackboxcore").PG.footballBlog_User(
     sequelize
   ),
+  Blog: require("@bikashrajkhowa-i12/blackboxcore").Mongo.FootballBlog,
 };

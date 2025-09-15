@@ -53,9 +53,12 @@ const Navbar = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="h-8 w-8 md:h-11 md:w-11 rounded-full cursor-pointer">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>ER</AvatarFallback>
+          <Avatar className={"cursor-pointer"}>
+            {user?.avatar_url ? (
+              <AvatarImage src={user.avatar_url} alt={user?.name || ""} />
+            ) : (
+              <AvatarFallback>{user?.name?.[0] || "ER"}</AvatarFallback>
+            )}
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -165,14 +168,15 @@ const Navbar = () => {
 
           <div className="flex justify-center items-center gap-4 md:gap-10">
             {/** Write a blog icon */}
-
-            <Link href={"/blog/create"}>
-              <HiOutlinePencilSquare
-                size={28}
-                className="opacity-70 hover:opacity-100 cursor-pointer"
-                title="Write a blog"
-              />
-            </Link>
+            {isAuthenticated && user?.role === "admin" && (
+              <Link href={"/blog/create"}>
+                <HiOutlinePencilSquare
+                  size={28}
+                  className="opacity-70 hover:opacity-100 cursor-pointer"
+                  title="Write a blog"
+                />
+              </Link>
+            )}
 
             {/* Auth section */}
             {isAuthenticated ? (

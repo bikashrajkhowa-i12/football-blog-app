@@ -22,7 +22,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline cursor-pointer",
         success:
           "bg-green-800 text-white shadow-xs hover:bg-green-900/90 cursor-pointer",
-        dark: "bg-zinc-800 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
+        dark: "bg-gray-800 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",
         base: "bg-cyan-100 text-gray-800 shadow-xs hover:opacity-90 cursor-pointer border border-cyan-200",
         warning:
           "bg-orange-400 opacity-100 text-white shadow-xs hover:opacity-90 cursor-pointer",

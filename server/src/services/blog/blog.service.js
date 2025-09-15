@@ -1,4 +1,5 @@
 const { blogs } = require("../../demo/data");
+const { Blog } = require("../../modals");
 
 const getAllBlogs = async () => {
   try {
@@ -18,7 +19,16 @@ const fetchBlogBySlugFromDb = async (slug) => {
   }
 };
 
+const createBlog = async (blogObj) => {
+  try {
+    return await Blog.create(blogObj);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllBlogs,
   fetchBlogBySlugFromDb,
+  createBlog,
 };
