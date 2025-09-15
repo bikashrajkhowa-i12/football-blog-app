@@ -55,7 +55,6 @@ function CreateBlog() {
 
   const textColor = "text-gray-800";
 
-  // helpers to add/remove dynamic arrays
   const addItem = (input, setInput, arr, setArr) => {
     if (input && !arr.includes(input)) {
       setArr([...arr, input]);
@@ -65,7 +64,6 @@ function CreateBlog() {
   const removeItem = (item, arr, setArr) =>
     setArr(arr.filter((t) => t !== item));
 
-  // sources logic
   const addSource = () => {
     if (sourceName && sourceUrl) {
       setSources([...sources, { name: sourceName, url: sourceUrl }]);
@@ -87,7 +85,6 @@ function CreateBlog() {
     document.getElementById("image-upload").value = "";
   };
 
-  // core submit
   const handleSubmit = async (status) => {
     try {
       setLoading(true);
