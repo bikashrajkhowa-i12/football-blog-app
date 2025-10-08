@@ -21,7 +21,17 @@ const fetchBlogBySlugFromDb = async (slug) => {
 
 const createBlog = async (blogObj) => {
   try {
-    return await Blog.create(blogObj);
+    const imgUrl = await handleImageUpload(blogObj); //s3 image upload!
+
+    const updatedObj = { ...blogObj, image_url: imgUrl || "" };
+    return await Blog.create(updatedObj);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const handleImageUpload = async (blogObj) => {
+  try {
   } catch (error) {
     throw error;
   }
