@@ -2,7 +2,8 @@ class CreateBlog {
   constructor(blogData, user_id) {
     this.title = blogData?.title?.trim() || "";
     this.preview = blogData?.preview?.trim() || "";
-    this.image_url = ""; // TODO: pass AWS S3 link for images
+    (this.image_file = blogData?.image_file || {}),
+      (this.image_url = blogData?.image_url?.trim() || "");
     this.content = blogData?.content || "";
     this.author_details = {
       name: blogData?.author_details?.name?.trim() || "",
