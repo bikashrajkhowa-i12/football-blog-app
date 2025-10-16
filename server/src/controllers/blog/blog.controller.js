@@ -16,6 +16,20 @@ const blogs = async (req, res) => {
   }
 };
 
+const drafts = async (req, res) => {
+  try {
+    const list = await blogService.getDrafts();
+    res.status(200).json({
+      drafts: list || [],
+      message: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error?.message || "Failed to fetch drafts from database",
+    });
+  }
+};
+
 const getBlogBySlug = async (req, res) => {
   try {
     const { slug = "" } = req?.params || {};
@@ -48,6 +62,7 @@ const createBlog = async (req, res) => {
 
 module.exports = {
   blogs,
+  drafts,
   getBlogBySlug,
   createBlog,
 };
