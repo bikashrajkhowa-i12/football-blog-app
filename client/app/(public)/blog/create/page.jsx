@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { TbTagsFilled } from "react-icons/tb";
 import { IoMdPeople } from "react-icons/io";
 import { IoAddCircle } from "react-icons/io5";
@@ -30,7 +32,7 @@ import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import TextEditor from "@/components/TextEditor";
 import { toast } from "sonner";
-import { BookType, ImagePlus, Loader2Icon } from "lucide-react";
+import { BookType, ImagePlus, Loader2Icon, MoreHorizontal } from "lucide-react";
 import { useAuth } from "@/contexts/auth/AuthContext";
 import UnauthorizedPage from "@/app/unauthorized/page";
 import callApi from "@/lib/callApi";
@@ -43,8 +45,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 function CreateBlog() {
+  const router = useRouter();
   const { isAuthenticated, user } = useAuth() || {};
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -64,7 +74,10 @@ function CreateBlog() {
   const [imageFile, setImageFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
+
+  //drafts
   const [drafts, setDrafts] = useState([]);
+  const [deleteDraft, setDeleteDraft] = useState(false);
 
   const textColor = "text-gray-800";
 
@@ -72,11 +85,11 @@ function CreateBlog() {
     const draftBlogs = async () => {
       const response = await callApi({
         method: "GET",
-        url: "/blog/drafts",
+        url: "/blogs/drafts",
       });
 
-      const { blogs = [] } = response?.data || {};
-      setDrafts(blogs?.length > 0 ? blogs : []);
+      const { drafts = [] } = response?.data || {};
+      setDrafts(drafts?.length > 0 ? drafts : []);
     };
 
     draftBlogs();
@@ -181,12 +194,14 @@ function CreateBlog() {
     document.getElementById("blog-form").reset();
   };
 
+  const handleDeleteDraft = () => {};
+
   return isAuthenticated && user?.role === "admin" ? (
     <div className="mx-auto flex max-w-6xl flex-col px-1 md:px-6">
       <BackButton />
 
       <div className="relative mx-auto w-full max-w-4xl">
-        <Tabs defaultValue="create">
+        <Tabs defaultValue="create" className={"space-y-6"}>
           <TabsList className="bg-gray-300">
             <TabsTrigger value="create" className="text-gray-800">
               Create <IoCreate />
@@ -197,7 +212,7 @@ function CreateBlog() {
           </TabsList>
           <TabsContent value="create" className="space-y-10">
             <h1
-              className={`py-4 px-2 md:px-4 text-4xl md:text-7xl font-extrabold tracking-tight ${textColor}`}
+              className={`pb-4 px-2 md:px-4 text-4xl md:text-7xl font-extrabold tracking-tight ${textColor}`}
             >
               Create New Blog :)
             </h1>
@@ -598,33 +613,94 @@ function CreateBlog() {
             </div>
           </TabsContent>
           <TabsContent value="drafts" className="space-y-10">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Sl no.</TableHead>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {drafts?.length > 0 ? (
-                  drafts.map((draft, idx) => {
-                    <TableRow key={idx}>
-                      <TableCell>{idx + 1}</TableCell>
-                      <TableCell>{draft?.title || "-"}</TableCell>
-                      <TableCell>{draft?.status || "-"}</TableCell>
-                      <TableCell className={"flex gap-2"}>
-                        <div>Edit</div>
-                        <div>Delete</div>
-                      </TableCell>
-                    </TableRow>;
-                  })
-                ) : (
-                  <div className="text-center"> No draft-blogs</div>
-                )}
-              </TableBody>
-            </Table>
+            <div className="rounded-md border overflow-x-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className={"bg-slate-900 hover:bg-slate-900"}>
+                    <TableHead className={"text-gray-200 text-center"}>
+                      Sl no.
+                    </TableHead>
+                    <TableHead className={"text-gray-200 text-center"}>
+                      Title
+                    </TableHead>
+                    <TableHead className={"text-gray-200 text-center"}>
+                      Status
+                    </TableHead>
+                    <TableHead className={"text-gray-200 text-center"}>
+                      Created At
+                    </TableHead>
+                    <TableHead className={"text-gray-200 text-center"}>
+                      Action
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {drafts?.length > 0 ? (
+                    drafts.map((draft, idx) => (
+                      <TableRow key={idx}>
+                        <TableCell className={"text-center"}>
+                          {idx + 1}
+                        </TableCell>
+                        <TableCell className={"text-center"}>
+                          {draft?.title || "-"}
+                        </TableCell>
+                        <TableCell className={"text-center"}>
+                          {draft?.status === "draft" ? (
+                            <Badge variant={"warning"} className={"rounded-md"}>
+                              draft
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant={"secondary"}
+                              className={"rounded-md"}
+                            >
+                              {draft?.status || "-"}
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className={"text-center"}>
+                          {draft?.createdAt || "-"}
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              className={"bg-gray-300"}
+                            >
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  router.push(
+                                    `/admin/content-management/${draft.slug}/edit`
+                                  )
+                                }
+                              >
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setDeleteDraft(true);
+                                  handleDeleteDraft();
+                                }}
+                              >
+                                Delete
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>Publish</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <div className="text-center"> No draft-blogs</div>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

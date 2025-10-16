@@ -10,6 +10,15 @@ const getAllBlogs = async () => {
   }
 };
 
+const getDrafts = async () => {
+  try {
+    const response = await Blog.find({ status: "draft" }).lean();
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const fetchBlogBySlugFromDb = async (slug) => {
   try {
     //TODO: Fetch from databse
@@ -39,6 +48,7 @@ const handleImageUpload = async (blogObj) => {
 
 module.exports = {
   getAllBlogs,
+  getDrafts,
   fetchBlogBySlugFromDb,
   createBlog,
 };
