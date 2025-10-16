@@ -4,6 +4,11 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { FaHome } from "react-icons/fa";
+import { FiClock } from "react-icons/fi";
+import { RiTrophyLine } from "react-icons/ri";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+
 import { useAuth } from "@/contexts/auth/AuthContext";
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 
@@ -37,12 +42,12 @@ const Navbar = () => {
   const pathname = usePathname();
 
   const links = [
-    { title: "Home", path: "/home" },
-    { title: "Latest", path: "/latest" },
-    { title: "Leagues", path: "/leagues" },
-    { title: "Teams", path: "/teams" },
-    { title: "Contact", path: "/contact" },
-    { title: "About", path: "/about" },
+    { title: "Home", path: "/home", icon: FaHome },
+    { title: "Latest", path: "/latest", icon: FiClock },
+    { title: "Leagues", path: "/leagues", icon: RiTrophyLine },
+    // { title: "Teams", path: "/teams" },
+    // { title: "Contact", path: "/contact" },
+    { title: "About", path: "/about", icon: AiOutlineInfoCircle },
   ];
 
   const ProfilePopOver = () => {
@@ -124,13 +129,14 @@ const Navbar = () => {
                       <Link
                         key={link.title}
                         href={link.path}
-                        className={`text-base font-medium transition-colors ${
+                        className={`flex gap-2 text-base font-medium transition-colors ${
                           isActive
                             ? "text-blue-600 font-semibold"
                             : "text-gray-800 hover:text-blue-600"
                         }`}
                         onClick={() => setIsSheetOpen(false)} // ✅ closes drawer
                       >
+                        <link.icon size={18} className="mt-1" />
                         {link.title}
                       </Link>
                     );
@@ -153,12 +159,13 @@ const Navbar = () => {
                 <li key={link.title}>
                   <Link
                     href={link.path}
-                    className={`relative text-lg font-medium transition-colors pb-1 ${
+                    className={`relative flex gap-1.5 text-lg font-medium transition-colors pb-1 ${
                       isActive
                         ? "text-blue-600 font-semibold after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600"
                         : "text-gray-800 hover:text-blue-600"
                     }`}
                   >
+                    <link.icon size={18} className="mt-1.5" />
                     {link.title}
                   </Link>
                 </li>
@@ -167,7 +174,7 @@ const Navbar = () => {
           </ul>
 
           <div className="flex justify-center items-center gap-4 md:gap-10">
-            {/** Write a blog icon */}
+            {/** "create blog" icon */}
             {isAuthenticated && user?.role === "admin" && (
               <Link href={"/blog/create"}>
                 <HiOutlinePencilSquare
