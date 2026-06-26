@@ -1,10 +1,23 @@
 const { blogs } = require("../../demo/data");
 const { Blog } = require("../../modals");
 
-const getAllBlogs = async () => {
+const getAllBlogs = async (query = {}) => {
   try {
     //TODO: Fetch from database
-    return await blogs;
+    let list = await blogs;
+    const { search } = query;
+    if (search) {
+      const searchTerm = search.toLowerCase().trim();
+      list = list.filter((blog) => {
+        const titleMatch = blog.title?.toLowerCase().includes(searchTerm);
+        const previewMatch = blog.preview?.toLowerCase().includes(searchTerm);
+        const categoryMatch = blog.category?.toLowerCase().includes(searchTerm);
+        const authorMatch = blog.author?.toLowerCase().includes(searchTerm);
+        const tagsMatch = blog.tags?.some((tag) => tag.toLowerCase().includes(searchTerm));
+        return titleMatch || previewMatch || categoryMatch || authorMatch || tagsMatch;
+      });
+    }
+    return list;
   } catch (error) {
     throw error;
   }

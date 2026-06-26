@@ -2,17 +2,19 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { FaHome } from "react-icons/fa";
 import { FiClock } from "react-icons/fi";
 import { RiTrophyLine } from "react-icons/ri";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { FiSearch } from "react-icons/fi";
 
 import { useAuth } from "@/contexts/auth/AuthContext";
 import { useAuthModal } from "@/contexts/auth/AuthModalContext";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetTrigger,
@@ -40,6 +42,8 @@ const Navbar = () => {
   const { openModal } = useAuthModal();
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const links = [
     { title: "Home", path: "/home", icon: FaHome },
@@ -49,6 +53,15 @@ const Navbar = () => {
     // { title: "Contact", path: "/contact" },
     { title: "About", path: "/about", icon: AiOutlineInfoCircle },
   ];
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setIsSheetOpen(false);
+    }
+  };
 
   const ProfilePopOver = () => {
     const optionStyles = `flex items-center gap-2 rounded-lg cursor-pointer 
@@ -123,6 +136,16 @@ const Navbar = () => {
                   </SheetDescription>
                 </SheetHeader>
                 <nav className="flex flex-col gap-4 px-4 py-2">
+                  <form onSubmit={handleSearch} className="relative mb-4">
+                    <Input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-8 pr-2 h-9"
+                    />
+                    <FiSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                  </form>
                   {links.map((link) => {
                     const isActive = pathname === link.path;
                     return (
@@ -174,6 +197,18 @@ const Navbar = () => {
           </ul>
 
           <div className="flex justify-center items-center gap-4 md:gap-10">
+            {/* Search bar for desktop */}
+            <form onSubmit={handleSearch} className="hidden md:flex relative w-full max-w-[200px] lg:max-w-[300px]">
+              <Input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-8 pr-2 h-9 w-full"
+              />
+              <FiSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            </form>
+
             {/** "create blog" icon */}
             {isAuthenticated && user?.role === "admin" && (
               <Link href={"/blog/create"}>

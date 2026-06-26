@@ -4,7 +4,7 @@ const blogDto = require("../../dtos/blog.dto");
 
 const blogs = async (req, res) => {
   try {
-    const list = await blogService.getAllBlogs();
+    const list = await blogService.getAllBlogs(req.query);
     res.status(200).json({
       blogs: list,
       message: "success",
